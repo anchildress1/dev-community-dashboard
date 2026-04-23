@@ -12,16 +12,20 @@ permissions:
 jobs:
   build-test-analyze:
     runs-on: ubuntu-latest
+    env:
+      # Expose at job level so steps can check availability without using
+      # secrets context in `if:` (secrets context is not allowed in conditions)
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.2.0
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
 
       - name: Setup Node
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 22
           cache: pnpm
@@ -30,7 +34,7 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Secret Scan (TruffleHog)
-        uses: trufflesecurity/trufflehog@041f07e9df901a1038a528e5525b0226d04dd5ea # v3.93.6
+        uses: trufflesecurity/trufflehog@6bd2d14f7a4bc1e569fa3550efa7ec632a4fa67b # v3.94.2
         with:
           path: ./
           base: ${{ github.event.pull_request.base.sha || '' }}
@@ -47,7 +51,7 @@ jobs:
         run: pnpm stylelint "**/*.{css,scss}"
 
       - name: Run actionlint
-        uses: reviewdog/action-actionlint@0d952c597ef8459f634d7145b0b044a9699e5e43 # v1.71.0
+        uses: reviewdog/action-actionlint@6fb7acc99f4a1008869fa8a0f09cfca740837d9d # v1.72.0
 
       - name: Run Hadolint
         uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5 # v3.3.0
@@ -65,7 +69,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: coverage-report
@@ -75,9 +79,11 @@ jobs:
           retention-days: 30
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9 # v7.0.0
-        # Skip if SONAR_TOKEN is not configured (e.g., in forks or dependabot PRs)
-        if: secrets.SONAR_TOKEN != ''
+        uses: SonarSource/sonarqube-scan-action@299e4b793aaa83bf2aba7c9c14bedbb485688ec4 # v7.1.0
+        # Skip if SONAR_TOKEN is not configured (e.g., in forks or dependabot PRs).
+        # Uses env.SONAR_TOKEN (set at job level) because secrets context is not
+        # allowed in step `if:` conditions.
+        if: ${{ env.SONAR_TOKEN != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
