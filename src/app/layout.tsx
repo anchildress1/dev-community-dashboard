@@ -1,16 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Marcellus, Source_Serif_4 } from "next/font/google";
+import { Inter_Tight, JetBrains_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 
-const marcellus = Marcellus({
-  weight: "400",
-  variable: "--font-marcellus",
+const interTight = Inter_Tight({
+  weight: ["400", "500", "600"],
+  variable: "--font-inter-tight",
   subsets: ["latin"],
   display: "swap",
 });
 
-const sourceSerif = Source_Serif_4({
-  variable: "--font-source-serif",
+const jetBrainsMono = JetBrains_Mono({
+  weight: ["400", "500"],
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-fraunces",
   subsets: ["latin"],
   display: "swap",
 });
@@ -23,7 +32,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "DEV Community Dashboard",
   description:
-    "Monitor and support community conversations with behavioral scoring and moderation insights.",
+    "Surface meaningful conversations on dev.to. Posts ranked by interaction quality, not popularity.",
   icons: {
     icon: { url: "/favicon.svg", type: "image/svg+xml" },
   },
@@ -34,8 +43,10 @@ const themeScript = `
   try {
     var t = localStorage.getItem("theme");
     var prefersDark = matchMedia("(prefers-color-scheme:dark)").matches;
-    var isDark = t === "dark" || (t !== "light" && prefersDark);
-    document.documentElement.classList.toggle("dark", isDark);
+    var root = document.documentElement;
+    root.classList.remove("dark", "paper");
+    if (t === "paper") root.classList.add("paper");
+    else if (t === "dark" || (t !== "light" && prefersDark)) root.classList.add("dark");
   } catch(e) {}
 })();
 `;
@@ -55,7 +66,7 @@ export default function RootLayout({
          hydrates, causing a harmless mismatch. */}
       <body
         suppressHydrationWarning
-        className={`${marcellus.variable} ${sourceSerif.variable} antialiased`}
+        className={`${interTight.variable} ${jetBrainsMono.variable} ${fraunces.variable} antialiased`}
       >
         {children}
       </body>

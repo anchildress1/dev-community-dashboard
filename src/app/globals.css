@@ -71,8 +71,13 @@
   --color-rose-700: var(--badge-rose-text);
 
   /* ── Fonts ─────────────────────────────────────────────────── */
-  --font-heading: var(--font-marcellus), georgia, serif;
-  --font-body: var(--font-source-serif), georgia, serif;
+  --font-heading: var(--font-fraunces), "Playfair Display", georgia, serif;
+  --font-body:
+    var(--font-inter-tight), -apple-system, blinkmacsystemfont, system-ui,
+    sans-serif;
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, "SF Mono", menlo, consolas,
+    monospace;
 }
 
 /*
@@ -251,7 +256,11 @@
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-body), georgia, serif;
+    font-family:
+      var(--font-body),
+      -apple-system,
+      system-ui,
+      sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
