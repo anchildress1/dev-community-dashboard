@@ -45,9 +45,9 @@ export function ScoreBar({
             </span>
           </button>
         </span>
-        <span>{sublabel}</span>
+        <span className="font-mono text-xs">{sublabel}</span>
       </div>
-      <div className="bg-surface-secondary h-2 w-full overflow-hidden rounded-full">
+      <div className="bg-surface-secondary border-surface-border h-1.5 w-full overflow-hidden rounded-full border">
         <div
           className={cn("h-full rounded-full transition-all", colorClass)}
           style={{ width: `${widthPercent}%` }}
