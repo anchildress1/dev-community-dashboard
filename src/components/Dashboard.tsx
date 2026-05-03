@@ -37,7 +37,10 @@ import {
   formatSignalDisplay,
   computeAgeHours,
   sortByAttentionPriority,
+  ATTENTION_META,
   SIGNAL_TOOLTIPS,
+  SIGNAL_LEGEND_COPY,
+  SIGNAL_LEGEND_ORDER,
   DISCUSSION_STATE_SIGNALS,
 } from "@/lib/dashboard-helpers";
 import type { Post, PostDetails, RecentPost } from "@/types/dashboard";
@@ -417,6 +420,76 @@ function DetailPanel({
   );
 }
 
+const TONE_DOT_CLASS: Record<string, string> = {
+  neutral: "bg-tone-neutral",
+  lime: "bg-tone-lime",
+  warm: "bg-tone-warm",
+  violet: "bg-tone-violet",
+  rose: "bg-tone-rose",
+  outline: "bg-tone-neutral",
+};
+
+function SignalLegend() {
+  return (
+    <aside className="border-surface-border bg-paper-clue rounded-[10px] border p-5">
+      <div className="text-text-muted mb-3 text-[11px] font-medium tracking-[0.08em] uppercase">
+        Signal classification
+      </div>
+      <ul className="space-y-2 text-[13px]">
+        {SIGNAL_LEGEND_ORDER.map((key) => {
+          const meta = ATTENTION_META[key];
+          if (!meta) return null;
+          return (
+            <li
+              key={key}
+              className="grid grid-cols-[auto_auto_1fr] items-center gap-2"
+            >
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "inline-block h-1.5 w-1.5 shrink-0 rounded-full",
+                  TONE_DOT_CLASS[meta.variant],
+                )}
+              />
+              <strong className="text-text-primary font-medium whitespace-nowrap">
+                {meta.label}
+              </strong>
+              <span className="text-text-muted text-[12px] leading-snug">
+                — {SIGNAL_LEGEND_COPY[key]}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </aside>
+  );
+}
+
+function Intro() {
+  return (
+    <section className="border-surface-border border-b px-6 py-10">
+      <div className="grid gap-10 md:grid-cols-[1.4fr_1fr] md:items-end">
+        <div>
+          <div className="text-accent-primary mb-3 text-[11px] font-medium tracking-[0.1em] uppercase">
+            DEV Community Dashboard · 2026
+          </div>
+          <h1 className="font-heading text-text-primary text-3xl leading-[1.1] font-normal tracking-[-0.02em] text-balance md:text-4xl">
+            Posts ranked by{" "}
+            <em className="text-accent-primary">conversation quality</em>, not
+            popularity.
+          </h1>
+          <p className="text-text-secondary mt-4 max-w-[56ch] text-base leading-relaxed">
+            Surface meaningful threads on dev.to. Every card is scored from the
+            comments inside it — effort, divergence, attention shift,
+            constructiveness. Click any post to read the analysis.
+          </p>
+        </div>
+        <SignalLegend />
+      </div>
+    </section>
+  );
+}
+
 export function Dashboard() {
   const [posts, setPosts] = React.useState<Post[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -527,9 +600,10 @@ export function Dashboard() {
             </a>
           </nav>
         </header>
-        <div className="scroll-fade flex-1 space-y-4 overflow-y-auto p-4">
+        <div className="scroll-fade flex-1 overflow-y-auto">
+          {!selectedPostId && <Intro />}
           <motion.div
-            className="space-y-4"
+            className="space-y-4 p-4"
             initial="hidden"
             animate="visible"
             variants={{
@@ -575,10 +649,12 @@ export function Dashboard() {
             ))}
           </motion.div>
           {posts.length === 0 && (
-            <EmptyState
-              icon={AlertCircle}
-              title="No posts found. Waiting for data sync."
-            />
+            <div className="p-4">
+              <EmptyState
+                icon={AlertCircle}
+                title="No posts found. Waiting for data sync."
+              />
+            </div>
           )}
         </div>
         <Footer />

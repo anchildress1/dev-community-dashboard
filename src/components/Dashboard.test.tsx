@@ -93,9 +93,9 @@ describe("Dashboard Component", () => {
 
     expect(screen.getByText("Needs review post")).toBeInTheDocument();
     expect(screen.getByText("Normal post")).toBeInTheDocument();
-    // New analyst-briefing labels
-    expect(screen.getByText("Rapid Discussion")).toBeInTheDocument();
-    expect(screen.getByText("Steady Signal")).toBeInTheDocument();
+    // New analyst-briefing labels (also appear in the intro legend)
+    expect(screen.getAllByText("Rapid Discussion").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Steady Signal").length).toBeGreaterThan(0);
   });
 
   it("handles post selection and fetching details", async () => {
@@ -150,8 +150,8 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      // BOOST_VISIBILITY triggers "Trending Signal" badge
-      expect(screen.getByText("Trending Signal")).toBeInTheDocument();
+      // BOOST_VISIBILITY triggers "Trending Signal" badge (label also in legend)
+      expect(screen.getAllByText("Trending Signal").length).toBeGreaterThan(0);
     });
   });
 
@@ -176,8 +176,10 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      // NEEDS_RESPONSE triggers "Awaiting Collaboration"
-      expect(screen.getByText("Awaiting Collaboration")).toBeInTheDocument();
+      // NEEDS_RESPONSE triggers "Awaiting Collaboration" (label also in legend)
+      expect(
+        screen.getAllByText("Awaiting Collaboration").length,
+      ).toBeGreaterThan(0);
     });
   });
 
@@ -202,12 +204,15 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      // NEEDS_SUPPORT triggers "Needs Support" badge
-      expect(screen.getByText("Needs Support")).toBeInTheDocument();
+      // NEEDS_SUPPORT triggers "Needs Support" badge (label also in legend)
+      expect(screen.getAllByText("Needs Support").length).toBeGreaterThan(0);
     });
 
-    // Verify the badge has the rose variant class
-    const badge = screen.getByText("Needs Support");
+    // Find the badge specifically (legend uses <strong>, badge uses bg-rose-100)
+    const badge = screen
+      .getAllByText("Needs Support")
+      .find((el) => el.classList.contains("bg-rose-100"));
+    expect(badge).toBeDefined();
     expect(badge).toHaveClass("bg-rose-100");
   });
 
@@ -232,8 +237,8 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      // SIGNAL_AT_RISK triggers "Anomalous Signal"
-      expect(screen.getByText("Anomalous Signal")).toBeInTheDocument();
+      // SIGNAL_AT_RISK triggers "Anomalous Signal" (label also in legend)
+      expect(screen.getAllByText("Anomalous Signal").length).toBeGreaterThan(0);
     });
   });
 
@@ -733,12 +738,13 @@ describe("Dashboard Component", () => {
       expect(screen.getByText("Needs review post")).toBeInTheDocument();
     });
 
-    // The title should come before the badge in DOM order (badge on right)
+    // Within the queue card, the title should come before the badge in DOM order
     const title = screen.getByText("Needs review post");
-    const badge = screen.getByText("Rapid Discussion");
+    const card = title.closest("[role='button']")!;
+    const badge = card.querySelector(".bg-warm-100");
 
     expect(
-      title.compareDocumentPosition(badge) & Node.DOCUMENT_POSITION_FOLLOWING,
+      title.compareDocumentPosition(badge!) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
   });
 

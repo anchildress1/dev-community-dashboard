@@ -39,6 +39,31 @@ export function getCategoryLabel(level: string): string {
 }
 
 /**
+ * Short editorial copy for the signal-classification legend in the intro
+ * hero. Each line should fit on one row beside its label and tone dot.
+ */
+export const SIGNAL_LEGEND_COPY: Record<string, string> = {
+  NEEDS_SUPPORT: "distress signals — an empathetic reply matters",
+  NEEDS_RESPONSE: "little engagement yet — early replies set the tone",
+  SIGNAL_AT_RISK: "diverges from community norms — worth a human look",
+  BOOST_VISIBILITY: "substantive but underseen — deserves more eyes",
+  NEEDS_REVIEW: "comments arriving fast — debate or noise?",
+  SILENT_SIGNAL: "reactions but no conversation — nudge it",
+  NORMAL: "typical patterns — no special attention needed",
+};
+
+/** Order matching the queue priority in docs/metrics.md. */
+export const SIGNAL_LEGEND_ORDER = [
+  "NEEDS_SUPPORT",
+  "NEEDS_RESPONSE",
+  "SIGNAL_AT_RISK",
+  "BOOST_VISIBILITY",
+  "NEEDS_REVIEW",
+  "SILENT_SIGNAL",
+  "NORMAL",
+] as const;
+
+/**
  * Returns a tooltip string explaining how the given attention category is
  * determined, surfacing the exact signals the pipeline looks for.
  * Returns undefined for categories that don't need additional explanation.
