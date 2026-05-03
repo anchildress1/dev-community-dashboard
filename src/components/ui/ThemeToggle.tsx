@@ -1,22 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Newspaper, Monitor } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Theme = "light" | "dark" | "system";
-const CYCLE: Theme[] = ["light", "dark", "system"];
-const THEME_ICON = { light: Sun, dark: Moon, system: Monitor } as const;
+type Theme = "light" | "dark" | "paper" | "system";
+const CYCLE: Theme[] = ["light", "dark", "paper", "system"];
+const THEME_ICON = {
+  light: Sun,
+  dark: Moon,
+  paper: Newspaper,
+  system: Monitor,
+} as const;
 const THEME_LABEL = {
   light: "Light mode",
   dark: "Dark mode",
+  paper: "Paper mode",
   system: "System theme",
 } as const;
 
 function applyTheme(theme: Theme): void {
   const prefersDark = matchMedia("(prefers-color-scheme:dark)").matches;
-  const isDark = theme === "dark" || (theme === "system" && prefersDark);
-  document.documentElement.classList.toggle("dark", isDark);
+  const root = document.documentElement;
+  root.classList.remove("dark", "paper");
+  if (theme === "paper") root.classList.add("paper");
+  else if (theme === "dark" || (theme === "system" && prefersDark))
+    root.classList.add("dark");
 }
 
 type ThemeToggleProps = Readonly<{ className?: string }>;
@@ -24,7 +33,8 @@ type ThemeToggleProps = Readonly<{ className?: string }>;
 function getInitialTheme(): Theme {
   try {
     const stored = localStorage.getItem("theme");
-    if (stored === "dark" || stored === "system") return stored;
+    if (stored === "dark" || stored === "paper" || stored === "system")
+      return stored;
   } catch {
     /* SSR or restricted localStorage — fall back to light */
   }
