@@ -61,7 +61,7 @@
 
 # DEV Community Dashboard
 
-A signal-surfacing tool for [Forem](https://forem.com/) communities (dev.to and self-hosted instances). It ingests the latest posts via the public Forem API, classifies each one into attention categories (Awaiting Collaboration, Anomalous Signal, Trending Signal, Rapid Discussion, Steady Signal), and persists the results in Supabase so community helpers can see where conversations need a human eye.
+A signal-surfacing tool for [Forem](https://forem.com/) communities (dev.to and self-hosted instances). It ingests the latest posts via the public Forem API, classifies each one into seven attention categories (Needs Support, Awaiting Collaboration, Anomalous Signal, Trending Signal, Rapid Discussion, Silent Signal, Steady Signal), and persists the results in Supabase so community helpers can see where conversations need a human eye.
 
 This is **not** a moderation tool or a scorecard. It is designed to help helpers know where to look.
 
