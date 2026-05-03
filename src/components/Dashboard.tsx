@@ -97,7 +97,7 @@ function DetailPanel({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="mx-auto max-w-4xl space-y-6 pb-20"
+      className="mx-auto max-w-6xl space-y-6 pb-20"
     >
       {/* Mobile back button */}
       <div className="mb-4 md:hidden">
@@ -110,129 +110,132 @@ function DetailPanel({
         </button>
       </div>
 
-      <div className="border-surface-border bg-paper-clue rounded-2xl border p-6 shadow-sm md:p-8">
-        {/* Desktop close button */}
-        <div className="mb-2 hidden justify-end md:flex">
-          <button
-            onClick={onClose}
-            aria-label="Close detail panel"
-            className="text-text-muted hover:text-text-primary rounded-lg p-1.5 transition-colors"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+      {/* Top bar — close button + signal chip */}
+      <div className="flex items-center justify-between gap-4">
+        <button
+          onClick={onClose}
+          aria-label="Close detail panel"
+          className="text-text-muted hover:text-text-primary hidden rounded-lg p-1.5 transition-colors md:flex"
+        >
+          <X className="h-5 w-5" />
+        </button>
+        <Badge
+          variant={getAttentionVariant(postDetails.attention_level)}
+          withDot
+          className="shrink-0 px-3 py-1 text-sm"
+          title={getCategoryTooltip(postDetails.attention_level)}
+        >
+          {getCategoryLabel(postDetails.attention_level)}
+        </Badge>
+      </div>
 
-        <div className="mb-6 flex items-start justify-between gap-4">
-          <div className="min-w-0 flex-1">
-            <h2 className="font-heading text-text-primary text-3xl leading-[1.15] font-normal tracking-[-0.02em] text-balance md:text-4xl">
-              <a
-                href={postDetails.dev_url || postDetails.canonical_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-accent-primary transition-colors hover:underline"
-              >
-                {postDetails.title}
-              </a>
-            </h2>
-            <PostMeta
-              author={postDetails.author}
-              date={postDetails.published_at}
-              variant="full"
-              className="mt-4"
-            />
-          </div>
-          <Badge
-            variant={getAttentionVariant(postDetails.attention_level)}
-            withDot
-            className="shrink-0 px-3 py-1 text-sm"
-            title={getCategoryTooltip(postDetails.attention_level)}
+      {/* Hero — title, meta, stats */}
+      <div className="border-surface-border border-b pb-6">
+        <h2 className="font-heading text-text-primary text-3xl leading-[1.15] font-normal tracking-[-0.02em] text-balance md:text-4xl">
+          <a
+            href={postDetails.dev_url || postDetails.canonical_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent-primary transition-colors hover:underline"
           >
-            {getCategoryLabel(postDetails.attention_level)}
-          </Badge>
-        </div>
+            {postDetails.title}
+          </a>
+        </h2>
+        <PostMeta
+          author={postDetails.author}
+          date={postDetails.published_at}
+          variant="full"
+          className="mt-4"
+        />
 
         <div
-          className="border-surface-border mb-8 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-y py-4"
+          className="mt-6 flex flex-wrap gap-x-9 gap-y-4"
           aria-label="Post engagement metrics"
         >
-          <span className="text-text-muted text-sm">
-            <span className="font-heading text-text-primary text-lg font-bold">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-text-primary font-mono text-2xl font-medium tracking-[-0.01em]">
               {postDetails.reactions}
-            </span>{" "}
-            reactions
-          </span>
-          <span className="text-text-muted text-sm">
-            <span className="font-heading text-text-primary text-lg font-bold">
+            </span>
+            <span className="text-text-muted text-[11px] tracking-[0.07em] uppercase">
+              reactions
+            </span>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-text-primary font-mono text-2xl font-medium tracking-[-0.01em]">
               {postDetails.comments}
-            </span>{" "}
-            comments
-          </span>
-          <span className="text-text-muted text-sm">
-            <span className="font-heading text-text-primary text-lg font-bold">
+            </span>
+            <span className="text-text-muted text-[11px] tracking-[0.07em] uppercase">
+              comments
+            </span>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-text-primary font-mono text-2xl font-medium tracking-[-0.01em]">
               {extractWordCount(postDetails.explanations)}
-            </span>{" "}
-            words
-          </span>
-          <span className="text-text-muted text-sm">
-            <span className="font-heading text-text-primary text-lg font-bold">
+            </span>
+            <span className="text-text-muted text-[11px] tracking-[0.07em] uppercase">
+              words
+            </span>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-text-primary font-mono text-2xl font-medium tracking-[-0.01em]">
               {computeAgeHours(postDetails.published_at)}h
-            </span>{" "}
-            old
-          </span>
+            </span>
+            <span className="text-text-muted text-[11px] tracking-[0.07em] uppercase">
+              old
+            </span>
+          </div>
         </div>
+      </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Conversation Signals — LEFT/first */}
-          <SectionCard>
-            <CardHeader className="pb-3">
-              <CardTitle
-                className="font-heading text-text-secondary text-lg"
-                title="Observable data points extracted from the conversation thread. Hover over any signal for an explanation."
-              >
-                Conversation Signals
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {postDetails.explanations &&
-              postDetails.explanations.length > 0 ? (
-                <ul className="space-y-3">
-                  {postDetails.explanations
-                    .filter(
-                      (exp) =>
-                        !DISCUSSION_STATE_SIGNALS.has(getSignalName(exp)),
-                    )
-                    .map((exp: string) => (
-                      <SignalItem
-                        key={exp}
-                        tooltip={SIGNAL_TOOLTIPS[getSignalName(exp)]}
-                      >
-                        {formatSignalDisplay(exp)}
-                      </SignalItem>
-                    ))}
-                </ul>
-              ) : (
-                <p className="text-text-muted text-sm italic">
-                  No specific flags raised. Routine interaction patterns
-                  detected.
-                </p>
-              )}
-            </CardContent>
-          </SectionCard>
+      {/* Module grid — 3-col continuous layout with col-2/col-3 spans */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {/* Conversation Signals — col-2 */}
+        <SectionCard className="md:col-span-2 xl:col-span-2">
+          <CardHeader className="pb-3">
+            <CardTitle
+              className="font-heading text-text-secondary text-lg"
+              title="Observable data points extracted from the conversation thread. Hover over any signal for an explanation."
+            >
+              Conversation Signals
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {postDetails.explanations && postDetails.explanations.length > 0 ? (
+              <ul className="space-y-3">
+                {postDetails.explanations
+                  .filter(
+                    (exp) => !DISCUSSION_STATE_SIGNALS.has(getSignalName(exp)),
+                  )
+                  .map((exp: string) => (
+                    <SignalItem
+                      key={exp}
+                      tooltip={SIGNAL_TOOLTIPS[getSignalName(exp)]}
+                    >
+                      {formatSignalDisplay(exp)}
+                    </SignalItem>
+                  ))}
+              </ul>
+            ) : (
+              <p className="text-text-muted text-sm italic">
+                No specific flags raised. Routine interaction patterns detected.
+              </p>
+            )}
+          </CardContent>
+        </SectionCard>
 
-          {/* Discussion State — RIGHT/second */}
-          <SectionCard variant="muted">
-            <CardHeader className="pb-3">
-              <CardTitle
-                className="font-heading text-text-secondary text-lg"
-                title="Composite indicators derived from conversation signals. Each bar shows intensity relative to community baselines."
-              >
-                Discussion State
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {Object.entries(
-                parseScoreBreakdown(postDetails.explanations),
-              ).map(([category, value]) => (
+        {/* Discussion State — col-1 */}
+        <SectionCard variant="muted">
+          <CardHeader className="pb-3">
+            <CardTitle
+              className="font-heading text-text-secondary text-lg"
+              title="Composite indicators derived from conversation signals. Each bar shows intensity relative to community baselines."
+            >
+              Discussion State
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {Object.entries(parseScoreBreakdown(postDetails.explanations)).map(
+              ([category, value]) => (
                 <div key={category}>
                   <ScoreBar
                     label={getCategoryDisplayName(category)}
@@ -243,187 +246,173 @@ function DetailPanel({
                     colorClass={getScoreBarClass(value)}
                   />
                 </div>
-              ))}
-            </CardContent>
-          </SectionCard>
-        </div>
+              ),
+            )}
+          </CardContent>
+        </SectionCard>
 
-        {/* Thread Momentum — full-width card below the grid */}
+        {/* Thread Momentum — col-3 */}
         <ChartContainer
           title="Thread Momentum"
           tooltip="A plain-language read of how the conversation is evolving right now."
-          className="mt-6"
+          className="md:col-span-2 xl:col-span-3"
         >
           <p className="font-heading text-text-primary text-lg leading-relaxed font-normal tracking-[-0.005em] italic">
             {getWhatsHappening(postDetails.explanations)}
           </p>
         </ChartContainer>
 
-        {/* Post Analytics — always shown for every post */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, delay: 0.1 }}
-          className="mt-6 space-y-6"
+        {/* Reply Velocity — col-2 */}
+        <ChartContainer
+          title="Reply Velocity"
+          tooltip="When comments arrived after publication, hour by hour. Spikes may indicate a sudden surge of interest; gaps may mean the conversation stalled."
+          className="md:col-span-2 xl:col-span-2"
         >
-          <h3 className="font-heading text-text-primary text-xl font-bold">
-            Post Analytics
-          </h3>
+          <LineChart
+            data={getVelocityChartData(postDetails.metrics)}
+            baseline={getVelocityBaseline(postDetails.metrics)}
+            xLabel="Hours since post"
+            yLabel="Comments"
+          />
+        </ChartContainer>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Reply Velocity */}
-            <ChartContainer
-              title="Reply Velocity"
-              tooltip="When comments arrived after publication, hour by hour. Spikes may indicate a sudden surge of interest; gaps may mean the conversation stalled."
-            >
-              <LineChart
-                data={getVelocityChartData(postDetails.metrics)}
-                baseline={getVelocityBaseline(postDetails.metrics)}
-                xLabel="Hours since post"
-                yLabel="Comments"
-              />
-            </ChartContainer>
+        {/* Participation Distribution — col-1 */}
+        <ChartContainer
+          title="Participation Distribution"
+          tooltip="Who is talking and how much. Multiple participants suggest broad interest; a single dominant voice may mean the thread needs fresh perspectives."
+        >
+          <HorizontalBarChart
+            data={getParticipationData(postDetails.metrics)}
+          />
+        </ChartContainer>
 
-            {/* Participation Distribution */}
-            <ChartContainer
-              title="Participation Distribution"
-              tooltip="Who is talking and how much. Multiple participants suggest broad interest; a single dominant voice may mean the thread needs fresh perspectives."
-            >
-              <HorizontalBarChart
-                data={getParticipationData(postDetails.metrics)}
-              />
-            </ChartContainer>
-          </div>
-
-          {/* Interaction Signal */}
-          <ChartContainer
-            title="Interaction Signal"
-            tooltip="Depth and substance of comments so far. Guides how you can contribute most constructively to the conversation."
-          >
-            {(() => {
-              const spread = getSignalSpreadData(postDetails.metrics);
-              const nonZeroTiers = [
-                spread.strong,
-                spread.moderate,
-                spread.faint,
-              ].filter((v) => v > 0).length;
-              // Need at least 2 non-zero tiers for the bar to be meaningful
-              return (
-                getInteractionMethod(postDetails.metrics) !== "unknown" &&
-                nonZeroTiers >= 2 && <SignalBar {...spread} />
-              );
-            })()}
-            {getInteractionMethod(postDetails.metrics) !== "unknown" && (
-              <div className="text-text-muted mt-3 flex flex-wrap items-center gap-4 text-xs">
-                <span title="Composite interaction quality score (0–1). Higher means more substantive discussion.">
-                  Signal:{" "}
-                  <span className="text-text-secondary font-medium">
-                    {getInteractionSignal(postDetails.metrics).toFixed(2)}
+        {/* Interaction Signal — col-3 */}
+        <ChartContainer
+          title="Interaction Signal"
+          tooltip="Depth and substance of comments so far. Guides how you can contribute most constructively to the conversation."
+          className="md:col-span-2 xl:col-span-3"
+        >
+          {(() => {
+            const spread = getSignalSpreadData(postDetails.metrics);
+            const nonZeroTiers = [
+              spread.strong,
+              spread.moderate,
+              spread.faint,
+            ].filter((v) => v > 0).length;
+            // Need at least 2 non-zero tiers for the bar to be meaningful
+            return (
+              getInteractionMethod(postDetails.metrics) !== "unknown" &&
+              nonZeroTiers >= 2 && <SignalBar {...spread} />
+            );
+          })()}
+          {getInteractionMethod(postDetails.metrics) !== "unknown" && (
+            <div className="text-text-muted mt-3 flex flex-wrap items-center gap-4 text-xs">
+              <span title="Composite interaction quality score (0–1). Higher means more substantive discussion.">
+                Signal:{" "}
+                <span className="text-text-secondary font-mono font-medium">
+                  {getInteractionSignal(postDetails.metrics).toFixed(2)}
+                </span>
+              </span>
+              <span title="How interaction scores were produced: LLM uses OpenAI structured output; Heuristic uses rule-based keyword scoring.">
+                Method:{" "}
+                <span className="text-text-secondary font-medium capitalize">
+                  {getInteractionMethod(postDetails.metrics)}
+                </span>
+              </span>
+              {getInteractionMethod(postDetails.metrics) === "llm" && (
+                <span title="How much scores vary across comments. High volatility means mixed quality; low means consistent depth.">
+                  Volatility:{" "}
+                  <span className="text-text-secondary font-mono font-medium">
+                    {Math.round(
+                      getInteractionVolatility(postDetails.metrics) * 100,
+                    )}
+                    %
                   </span>
                 </span>
-                <span title="How interaction scores were produced: LLM uses OpenAI structured output; Heuristic uses rule-based keyword scoring.">
-                  Method:{" "}
-                  <span className="text-text-secondary font-medium capitalize">
-                    {getInteractionMethod(postDetails.metrics)}
-                  </span>
+              )}
+            </div>
+          )}
+          {getTopicTags(postDetails.metrics).length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1" aria-label="Topic tags">
+              {getTopicTags(postDetails.metrics).map((tag) => (
+                <span
+                  key={tag}
+                  className="bg-surface-raised text-text-secondary rounded px-1.5 py-0.5 font-mono text-xs"
+                  title="LLM-extracted topic tag from post content"
+                >
+                  {tag}
                 </span>
-                {getInteractionMethod(postDetails.metrics) === "llm" && (
-                  <span title="How much scores vary across comments. High volatility means mixed quality; low means consistent depth.">
-                    Volatility:{" "}
-                    <span className="text-text-secondary font-medium">
-                      {Math.round(
-                        getInteractionVolatility(postDetails.metrics) * 100,
-                      )}
-                      %
-                    </span>
-                  </span>
-                )}
-              </div>
-            )}
-            {getTopicTags(postDetails.metrics).length > 0 && (
-              <div
-                className="mt-2 flex flex-wrap gap-1"
-                aria-label="Topic tags"
-              >
-                {getTopicTags(postDetails.metrics).map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-surface-raised text-text-secondary rounded px-1.5 py-0.5 text-xs"
-                    title="LLM-extracted topic tag from post content"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </ChartContainer>
+              ))}
+            </div>
+          )}
+        </ChartContainer>
 
-          {/* Constructiveness Trend */}
-          <ChartContainer
-            title="Constructiveness Trend"
-            tooltip="How reply depth changes over time. Rising depth means people are building on each other's ideas; flat or falling depth may mean the conversation is losing momentum."
-          >
-            <LineChart
-              data={getConstructivenessData(postDetails.metrics)}
-              xLabel="Hours since post"
-              yLabel="Reply depth"
-              seriesColor="tertiary"
-            />
-          </ChartContainer>
+        {/* Constructiveness Trend — col-2 */}
+        <ChartContainer
+          title="Constructiveness Trend"
+          tooltip="How reply depth changes over time. Rising depth means people are building on each other's ideas; flat or falling depth may mean the conversation is losing momentum."
+          className="md:col-span-2 xl:col-span-2"
+        >
+          <LineChart
+            data={getConstructivenessData(postDetails.metrics)}
+            xLabel="Hours since post"
+            yLabel="Reply depth"
+            seriesColor="tertiary"
+          />
+        </ChartContainer>
 
-          {/* Contributing Signals */}
+        {/* Contributing Signals — col-1 */}
+        <ChartContainer
+          title="Contributing Signals"
+          tooltip="Specific behavioral signals detected in this conversation. Highlighted markers indicate patterns that diverge from typical community discussion."
+        >
+          <MarkerTimeline markers={getRiskMarkers(postDetails.metrics)} />
+        </ChartContainer>
+
+        {/* Recent Posts by Author — col-3 */}
+        {postDetails.recent_posts && postDetails.recent_posts.length > 0 && (
           <ChartContainer
-            title="Contributing Signals"
-            tooltip="Specific behavioral signals detected in this conversation. Highlighted markers indicate patterns that diverge from typical community discussion."
+            title={`Recent Posts by @${postDetails.author}`}
+            className="md:col-span-2 xl:col-span-3"
           >
-            <MarkerTimeline markers={getRiskMarkers(postDetails.metrics)} />
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {postDetails.recent_posts.map((rp: RecentPost) => (
+                <SectionCard
+                  key={rp.id}
+                  className="hover:border-surface-raised transition-colors"
+                >
+                  <CardHeader className="p-4 pb-2">
+                    <CardTitle className="text-text-secondary line-clamp-2 text-base">
+                      <a
+                        href={rp.dev_url || rp.canonical_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                      >
+                        {rp.title}
+                      </a>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0">
+                    <div className="mt-2 flex items-center justify-between">
+                      <span className="text-text-muted font-mono text-xs">
+                        {new Date(rp.published_at).toLocaleDateString()}
+                      </span>
+                      <Badge
+                        variant={getRecentPostBadgeVariant(rp.attention_level)}
+                        withDot
+                        className="px-2 py-0 text-[10px]"
+                      >
+                        {getCategoryLabel(rp.attention_level)}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </SectionCard>
+              ))}
+            </div>
           </ChartContainer>
-        </motion.div>
+        )}
       </div>
-
-      {/* Author History */}
-      {postDetails.recent_posts && postDetails.recent_posts.length > 0 && (
-        <div className="mt-8">
-          <h3 className="font-heading text-text-primary mb-4 px-1 text-xl font-bold">
-            Recent Posts by Author
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {postDetails.recent_posts.map((rp: RecentPost) => (
-              <SectionCard
-                key={rp.id}
-                className="hover:border-surface-raised transition-colors"
-              >
-                <CardHeader className="p-4 pb-2">
-                  <CardTitle className="text-text-secondary line-clamp-2 text-base">
-                    <a
-                      href={rp.dev_url || rp.canonical_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:underline"
-                    >
-                      {rp.title}
-                    </a>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 pt-0">
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="text-text-muted text-xs">
-                      {new Date(rp.published_at).toLocaleDateString()}
-                    </span>
-                    <Badge
-                      variant={getRecentPostBadgeVariant(rp.attention_level)}
-                      withDot
-                      className="px-2 py-0 text-[10px]"
-                    >
-                      {getCategoryLabel(rp.attention_level)}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </SectionCard>
-            ))}
-          </div>
-        </div>
-      )}
     </motion.div>
   );
 }
