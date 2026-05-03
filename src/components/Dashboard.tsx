@@ -124,7 +124,7 @@ function DetailPanel({
 
         <div className="mb-6 flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
-            <h2 className="font-heading text-text-primary text-2xl leading-tight font-bold md:text-3xl">
+            <h2 className="font-heading text-text-primary text-3xl leading-[1.15] font-normal tracking-[-0.02em] text-balance md:text-4xl">
               <a
                 href={postDetails.dev_url || postDetails.canonical_url}
                 target="_blank"
@@ -254,7 +254,7 @@ function DetailPanel({
           tooltip="A plain-language read of how the conversation is evolving right now."
           className="mt-6"
         >
-          <p className="text-text-secondary text-sm leading-relaxed">
+          <p className="font-heading text-text-primary text-lg leading-relaxed font-normal tracking-[-0.005em] italic">
             {getWhatsHappening(postDetails.explanations)}
           </p>
         </ChartContainer>
