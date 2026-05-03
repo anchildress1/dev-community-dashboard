@@ -64,13 +64,13 @@ export function HorizontalBarChart({
 
         return (
           <g key={item.label}>
-            {/* Label */}
+            {/* Label — usernames in mono per editorial palette */}
             <text
               x={LABEL_WIDTH - 4}
               y={y + BAR_HEIGHT / 2 + 1}
               textAnchor="end"
               dominantBaseline="middle"
-              className="fill-text-secondary text-[10px]"
+              className="fill-text-secondary font-mono text-[10px]"
             >
               {item.label.length > 12
                 ? `${item.label.slice(0, 11)}…`
@@ -103,7 +103,7 @@ export function HorizontalBarChart({
               x={LABEL_WIDTH + barWidth + 6}
               y={y + BAR_HEIGHT / 2 + 1}
               dominantBaseline="middle"
-              className="fill-text-muted text-[9px]"
+              className="fill-text-muted font-mono text-[9px]"
             >
               {pct}%
             </text>

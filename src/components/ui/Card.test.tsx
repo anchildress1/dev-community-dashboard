@@ -13,7 +13,7 @@ describe("Card components", () => {
     const { container } = render(<Card className="test-card">Content</Card>);
     expect(container.firstChild).toHaveClass(
       "test-card",
-      "rounded-xl",
+      "rounded-[10px]",
       "border",
       "bg-card",
     );

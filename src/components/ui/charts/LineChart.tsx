@@ -148,7 +148,7 @@ export function LineChart({
           x={width / 2}
           y={height - 4}
           textAnchor="middle"
-          className="fill-chart-axis text-[9px]"
+          className="fill-chart-axis font-mono text-[9px]"
         >
           {xLabel}
         </text>
@@ -161,7 +161,7 @@ export function LineChart({
           y={height / 2}
           textAnchor="middle"
           transform={`rotate(-90, 8, ${height / 2})`}
-          className="fill-chart-axis text-[9px]"
+          className="fill-chart-axis font-mono text-[9px]"
         >
           {yLabel}
         </text>
