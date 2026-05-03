@@ -88,7 +88,7 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      expect(screen.queryByText("DEV Community Dashboard")).toBeInTheDocument();
+      expect(screen.queryByText("dev/signal")).toBeInTheDocument();
     });
 
     expect(screen.getByText("Needs review post")).toBeInTheDocument();
@@ -359,10 +359,10 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText("DEV Community Dashboard")).toBeInTheDocument();
+      expect(screen.getByText("dev/signal")).toBeInTheDocument();
     });
 
-    const feedbackLink = screen.getByText("Feedback").closest("a");
+    const feedbackLink = screen.getByLabelText("Feedback on GitHub");
     expect(feedbackLink).toHaveAttribute(
       "href",
       "https://github.com/ChecKMarKDevTools/dev-community-dashboard/issues",
@@ -879,7 +879,7 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText("DEV Community Dashboard")).toBeInTheDocument();
+      expect(screen.getByText("dev/signal")).toBeInTheDocument();
     });
 
     // ThemeToggle renders a button with aria-label

@@ -486,31 +486,46 @@ export function Dashboard() {
           selectedPostId ? "hidden md:flex md:w-1/2 lg:w-4/12" : "w-full",
         )}
       >
-        <header className="header-glass border-surface-border border-b p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="font-heading text-text-primary text-2xl font-bold tracking-tight">
-                DEV Community Dashboard
-              </h1>
-              <p className="text-text-muted mt-2 text-sm tracking-wide md:text-base">
-                Surface meaningful conversations on DEV.to. Posts are ranked by
-                interaction quality, not popularity — click any card to explore
-                the full analysis.
-              </p>
+        <header className="header-glass border-surface-border flex h-[60px] items-center justify-between border-b px-6">
+          <div className="flex items-center gap-2.5">
+            <svg
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              aria-hidden="true"
+              className="text-accent-primary shrink-0"
+            >
+              <path
+                d="M3 18 L7 14 L10 17 L14 9 L17 13 L21 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <div className="flex flex-col leading-[1.1]">
+              <span className="text-text-primary text-[15px] font-semibold tracking-[-0.01em]">
+                dev/signal
+              </span>
+              <span className="text-text-muted text-[10px] tracking-[0.1em] uppercase">
+                conversation analysis
+              </span>
             </div>
-            <nav aria-label="Site actions" className="flex items-center gap-2">
-              <ThemeToggle />
-              <a
-                href="https://github.com/ChecKMarKDevTools/dev-community-dashboard/issues"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border-surface-border text-accent-primary hover:bg-surface-secondary hover:text-accent-hover inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors"
-              >
-                <MessageSquare className="h-3 w-3" aria-hidden="true" />{" "}
-                Feedback <ExternalLink className="h-3 w-3" aria-hidden="true" />
-              </a>
-            </nav>
           </div>
+          <nav aria-label="Site actions" className="flex items-center gap-1">
+            <ThemeToggle />
+            <a
+              href="https://github.com/ChecKMarKDevTools/dev-community-dashboard/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Feedback on GitHub"
+              className="text-text-muted hover:text-text-primary inline-flex items-center gap-1.5 rounded-lg p-2 text-xs font-medium transition-colors"
+            >
+              <MessageSquare className="h-4 w-4" aria-hidden="true" />
+              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+            </a>
+          </nav>
         </header>
         <div className="scroll-fade flex-1 space-y-4 overflow-y-auto p-4">
           <motion.div

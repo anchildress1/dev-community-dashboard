@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "DEV Community Dashboard",
+  title: "dev/signal — conversation analysis",
   description:
     "Surface meaningful conversations on dev.to. Posts ranked by interaction quality, not popularity.",
   icons: {
