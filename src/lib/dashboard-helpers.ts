@@ -1,32 +1,23 @@
 import type { Post } from "@/types/dashboard";
 
 /** Attention-level metadata: badge variant and human-readable label.
- *  No traffic-light grading — each category has a distinct semantic color.
- *  neutral = slate (routine), info = steel-blue (active), teal = teal (waiting),
- *  attention = indigo/blue (high activity), critical = slate/gray (policy risk),
- *  violet = violet (noticed but quiet — reactions without conversation).
+ *  Each category maps to a tone in the dev/signal palette:
+ *  neutral = routine, lime = trending, warm = warning/active,
+ *  violet = quiet/needs-a-nudge, rose = compassion (support).
  */
 export const ATTENTION_META: Record<
   string,
   {
-    variant:
-      | "neutral"
-      | "info"
-      | "teal"
-      | "attention"
-      | "critical"
-      | "violet"
-      | "rose"
-      | "outline";
+    variant: "neutral" | "lime" | "warm" | "violet" | "rose" | "outline";
     label: string;
   }
 > = {
   NEEDS_SUPPORT: { variant: "rose", label: "Needs Support" },
   NORMAL: { variant: "neutral", label: "Steady Signal" },
-  BOOST_VISIBILITY: { variant: "info", label: "Trending Signal" },
-  NEEDS_RESPONSE: { variant: "teal", label: "Awaiting Collaboration" },
-  NEEDS_REVIEW: { variant: "attention", label: "Rapid Discussion" },
-  SIGNAL_AT_RISK: { variant: "critical", label: "Anomalous Signal" },
+  BOOST_VISIBILITY: { variant: "lime", label: "Trending Signal" },
+  NEEDS_RESPONSE: { variant: "violet", label: "Awaiting Collaboration" },
+  NEEDS_REVIEW: { variant: "warm", label: "Rapid Discussion" },
+  SIGNAL_AT_RISK: { variant: "warm", label: "Anomalous Signal" },
   SILENT_SIGNAL: { variant: "violet", label: "Silent Signal" },
 };
 
@@ -37,7 +28,7 @@ const DEFAULT_ATTENTION = {
 
 export function getAttentionVariant(
   level: string,
-): "neutral" | "info" | "teal" | "attention" | "critical" | "violet" | "rose" {
+): "neutral" | "lime" | "warm" | "violet" | "rose" {
   const v = (ATTENTION_META[level] ?? DEFAULT_ATTENTION).variant;
   // "outline" only applies in the recent-posts context; main badges fall back to neutral
   return v === "outline" ? "neutral" : v;
@@ -75,15 +66,7 @@ export function getCategoryTooltip(level: string): string | undefined {
 
 export function getRecentPostBadgeVariant(
   level: string,
-):
-  | "neutral"
-  | "info"
-  | "teal"
-  | "attention"
-  | "critical"
-  | "violet"
-  | "rose"
-  | "outline" {
+): "neutral" | "lime" | "warm" | "violet" | "rose" | "outline" {
   const v = (ATTENTION_META[level] ?? DEFAULT_ATTENTION).variant;
   // neutral (routine) maps to outline for recent-posts context
   return v === "neutral" ? "outline" : v;

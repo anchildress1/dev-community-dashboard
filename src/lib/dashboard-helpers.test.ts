@@ -28,10 +28,10 @@ describe("getAttentionVariant", () => {
   it("returns correct variant for each known attention level", () => {
     expect(getAttentionVariant("NEEDS_SUPPORT")).toBe("rose");
     expect(getAttentionVariant("NORMAL")).toBe("neutral");
-    expect(getAttentionVariant("BOOST_VISIBILITY")).toBe("info");
-    expect(getAttentionVariant("NEEDS_RESPONSE")).toBe("teal");
-    expect(getAttentionVariant("NEEDS_REVIEW")).toBe("attention");
-    expect(getAttentionVariant("SIGNAL_AT_RISK")).toBe("critical");
+    expect(getAttentionVariant("BOOST_VISIBILITY")).toBe("lime");
+    expect(getAttentionVariant("NEEDS_RESPONSE")).toBe("violet");
+    expect(getAttentionVariant("NEEDS_REVIEW")).toBe("warm");
+    expect(getAttentionVariant("SIGNAL_AT_RISK")).toBe("warm");
     expect(getAttentionVariant("SILENT_SIGNAL")).toBe("violet");
   });
 
@@ -96,10 +96,10 @@ describe("getRecentPostBadgeVariant", () => {
 
   it("preserves non-neutral variants", () => {
     expect(getRecentPostBadgeVariant("NEEDS_SUPPORT")).toBe("rose");
-    expect(getRecentPostBadgeVariant("BOOST_VISIBILITY")).toBe("info");
-    expect(getRecentPostBadgeVariant("NEEDS_RESPONSE")).toBe("teal");
-    expect(getRecentPostBadgeVariant("NEEDS_REVIEW")).toBe("attention");
-    expect(getRecentPostBadgeVariant("SIGNAL_AT_RISK")).toBe("critical");
+    expect(getRecentPostBadgeVariant("BOOST_VISIBILITY")).toBe("lime");
+    expect(getRecentPostBadgeVariant("NEEDS_RESPONSE")).toBe("violet");
+    expect(getRecentPostBadgeVariant("NEEDS_REVIEW")).toBe("warm");
+    expect(getRecentPostBadgeVariant("SIGNAL_AT_RISK")).toBe("warm");
     expect(getRecentPostBadgeVariant("SILENT_SIGNAL")).toBe("violet");
   });
 

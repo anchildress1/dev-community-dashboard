@@ -143,6 +143,7 @@ function DetailPanel({
           </div>
           <Badge
             variant={getAttentionVariant(postDetails.attention_level)}
+            withDot
             className="shrink-0 px-3 py-1 text-sm"
             title={getCategoryTooltip(postDetails.attention_level)}
           >
@@ -411,6 +412,7 @@ function DetailPanel({
                     </span>
                     <Badge
                       variant={getRecentPostBadgeVariant(rp.attention_level)}
+                      withDot
                       className="px-2 py-0 text-[10px]"
                     >
                       {getCategoryLabel(rp.attention_level)}
@@ -557,6 +559,7 @@ export function Dashboard() {
                     </div>
                     <Badge
                       variant={getAttentionVariant(post.attention_level)}
+                      withDot
                       className="shrink-0"
                       title={getCategoryTooltip(post.attention_level)}
                     >

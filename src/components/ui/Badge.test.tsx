@@ -16,32 +16,18 @@ describe("Badge", () => {
     expect(badge).toHaveClass("bg-neutral-200");
   });
 
-  it("renders info badge", () => {
-    render(<Badge variant="info">Active</Badge>);
+  it("renders lime badge", () => {
+    render(<Badge variant="lime">Trending</Badge>);
+    const badge = screen.getByText("Trending");
+    expect(badge).toBeInTheDocument();
+    expect(badge).toHaveClass("bg-lime-100");
+  });
+
+  it("renders warm badge", () => {
+    render(<Badge variant="warm">Active</Badge>);
     const badge = screen.getByText("Active");
     expect(badge).toBeInTheDocument();
-    expect(badge).toHaveClass("bg-info-100");
-  });
-
-  it("renders teal badge", () => {
-    render(<Badge variant="teal">Waiting</Badge>);
-    const badge = screen.getByText("Waiting");
-    expect(badge).toBeInTheDocument();
-    expect(badge).toHaveClass("bg-teal-100");
-  });
-
-  it("renders attention badge", () => {
-    render(<Badge variant="attention">Escalating</Badge>);
-    const badge = screen.getByText("Escalating");
-    expect(badge).toBeInTheDocument();
-    expect(badge).toHaveClass("bg-attention-100");
-  });
-
-  it("renders critical badge", () => {
-    render(<Badge variant="critical">Issue</Badge>);
-    const badge = screen.getByText("Issue");
-    expect(badge).toBeInTheDocument();
-    expect(badge).toHaveClass("bg-critical-100");
+    expect(badge).toHaveClass("bg-warm-100");
   });
 
   it("renders violet badge", () => {
@@ -76,5 +62,23 @@ describe("Badge", () => {
     render(<Badge className="custom-class">Test</Badge>);
     const badge = screen.getByText("Test");
     expect(badge).toHaveClass("custom-class");
+  });
+
+  it("renders a tone dot when withDot is true", () => {
+    render(
+      <Badge variant="lime" withDot>
+        Trending
+      </Badge>,
+    );
+    const badge = screen.getByText("Trending");
+    const dot = badge.querySelector("span[aria-hidden='true']");
+    expect(dot).not.toBeNull();
+    expect(dot).toHaveClass("bg-tone-lime");
+  });
+
+  it("omits the tone dot by default", () => {
+    render(<Badge variant="lime">Trending</Badge>);
+    const badge = screen.getByText("Trending");
+    expect(badge.querySelector("span[aria-hidden='true']")).toBeNull();
   });
 });

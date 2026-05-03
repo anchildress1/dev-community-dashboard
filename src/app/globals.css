@@ -47,22 +47,16 @@
   --color-tone-warm: var(--t-warm);
   --color-tone-neutral: var(--t-neutral);
 
-  /* ── Semantic badge palette (kept for current Badge variants) ── */
+  /* ── Badge palette — tone-named variants with dots ─────────── */
   --color-neutral-200: var(--badge-neutral-bg);
   --color-neutral-300: var(--badge-neutral-hover);
   --color-neutral-700: var(--badge-neutral-text);
-  --color-info-100: var(--badge-info-bg);
-  --color-info-200: var(--badge-info-hover);
-  --color-info-700: var(--badge-info-text);
-  --color-teal-100: var(--badge-teal-bg);
-  --color-teal-200: var(--badge-teal-hover);
-  --color-teal-700: var(--badge-teal-text);
-  --color-attention-100: var(--badge-attention-bg);
-  --color-attention-200: var(--badge-attention-hover);
-  --color-attention-700: var(--badge-attention-text);
-  --color-critical-100: var(--badge-critical-bg);
-  --color-critical-200: var(--badge-critical-hover);
-  --color-critical-700: var(--badge-critical-text);
+  --color-lime-100: var(--badge-lime-bg);
+  --color-lime-200: var(--badge-lime-hover);
+  --color-lime-700: var(--badge-lime-text);
+  --color-warm-100: var(--badge-warm-bg);
+  --color-warm-200: var(--badge-warm-hover);
+  --color-warm-700: var(--badge-warm-text);
   --color-violet-100: var(--badge-violet-bg);
   --color-violet-200: var(--badge-violet-hover);
   --color-violet-700: var(--badge-violet-text);
@@ -139,22 +133,12 @@
     --badge-neutral-bg: oklch(94% 0.006 80deg);
     --badge-neutral-hover: oklch(90% 0.006 80deg);
     --badge-neutral-text: oklch(42% 0.005 60deg);
-    --badge-info-bg: color-mix(in oklch, var(--t-azure), transparent 88%);
-    --badge-info-hover: color-mix(in oklch, var(--t-azure), transparent 80%);
-    --badge-info-text: oklch(40% 0.15 240deg);
-    --badge-teal-bg: color-mix(in oklch, var(--t-lime), transparent 88%);
-    --badge-teal-hover: color-mix(in oklch, var(--t-lime), transparent 80%);
-    --badge-teal-text: oklch(38% 0.16 145deg);
-    --badge-attention-bg: color-mix(in oklch, var(--t-warm), transparent 88%);
-    --badge-attention-hover: color-mix(
-      in oklch,
-      var(--t-warm),
-      transparent 80%
-    );
-    --badge-attention-text: oklch(40% 0.13 60deg);
-    --badge-critical-bg: color-mix(in oklch, var(--t-warm), transparent 84%);
-    --badge-critical-hover: color-mix(in oklch, var(--t-warm), transparent 75%);
-    --badge-critical-text: oklch(36% 0.13 60deg);
+    --badge-lime-bg: color-mix(in oklch, var(--t-lime), transparent 88%);
+    --badge-lime-hover: color-mix(in oklch, var(--t-lime), transparent 80%);
+    --badge-lime-text: oklch(38% 0.16 145deg);
+    --badge-warm-bg: color-mix(in oklch, var(--t-warm), transparent 84%);
+    --badge-warm-hover: color-mix(in oklch, var(--t-warm), transparent 75%);
+    --badge-warm-text: oklch(38% 0.13 60deg);
     --badge-violet-bg: color-mix(in oklch, var(--t-violet), transparent 88%);
     --badge-violet-hover: color-mix(in oklch, var(--t-violet), transparent 80%);
     --badge-violet-text: oklch(40% 0.17 300deg);
@@ -205,22 +189,12 @@
     --badge-neutral-bg: oklch(24% 0.005 60deg);
     --badge-neutral-hover: oklch(30% 0.005 60deg);
     --badge-neutral-text: oklch(78% 0.005 60deg);
-    --badge-info-bg: color-mix(in oklch, var(--t-azure), transparent 78%);
-    --badge-info-hover: color-mix(in oklch, var(--t-azure), transparent 68%);
-    --badge-info-text: oklch(80% 0.13 240deg);
-    --badge-teal-bg: color-mix(in oklch, var(--t-lime), transparent 78%);
-    --badge-teal-hover: color-mix(in oklch, var(--t-lime), transparent 68%);
-    --badge-teal-text: oklch(82% 0.16 145deg);
-    --badge-attention-bg: color-mix(in oklch, var(--t-warm), transparent 78%);
-    --badge-attention-hover: color-mix(
-      in oklch,
-      var(--t-warm),
-      transparent 68%
-    );
-    --badge-attention-text: oklch(82% 0.13 60deg);
-    --badge-critical-bg: color-mix(in oklch, var(--t-warm), transparent 70%);
-    --badge-critical-hover: color-mix(in oklch, var(--t-warm), transparent 60%);
-    --badge-critical-text: oklch(85% 0.13 60deg);
+    --badge-lime-bg: color-mix(in oklch, var(--t-lime), transparent 78%);
+    --badge-lime-hover: color-mix(in oklch, var(--t-lime), transparent 68%);
+    --badge-lime-text: oklch(82% 0.16 145deg);
+    --badge-warm-bg: color-mix(in oklch, var(--t-warm), transparent 70%);
+    --badge-warm-hover: color-mix(in oklch, var(--t-warm), transparent 60%);
+    --badge-warm-text: oklch(85% 0.13 60deg);
     --badge-violet-bg: color-mix(in oklch, var(--t-violet), transparent 78%);
     --badge-violet-hover: color-mix(in oklch, var(--t-violet), transparent 68%);
     --badge-violet-text: oklch(78% 0.16 300deg);
