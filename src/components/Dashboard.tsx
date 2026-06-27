@@ -501,10 +501,14 @@ export function Dashboard() {
   );
   const [detailsLoading, setDetailsLoading] = React.useState(false);
 
-  const handleSelectPost = React.useCallback((id: number) => {
-    setSelectedPostId(id);
-    setDetailsLoading(true);
-  }, []);
+  const handleSelectPost = React.useCallback(
+    (id: number) => {
+      if (id === selectedPostId) return;
+      setSelectedPostId(id);
+      setDetailsLoading(true);
+    },
+    [selectedPostId],
+  );
 
   const handleClosePost = React.useCallback(() => {
     setSelectedPostId(null);

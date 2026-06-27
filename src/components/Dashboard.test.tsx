@@ -129,6 +129,42 @@ describe("Dashboard Component", () => {
     expect(moderateLabels.length).toBeGreaterThanOrEqual(2);
   });
 
+  it("does not re-fetch or re-load when the selected card is clicked again", async () => {
+    const fetchMock = vi.fn().mockImplementation((url) => {
+      if (url === "/api/posts")
+        return Promise.resolve({ ok: true, json: async () => mockPosts });
+      if (url === "/api/posts/1")
+        return Promise.resolve({ ok: true, json: async () => mockPostDetails });
+      return Promise.reject(new Error("Not found"));
+    });
+    globalThis.fetch = fetchMock as Mock;
+
+    render(<Dashboard />);
+    await waitFor(() => {
+      expect(screen.getByText("Needs review post")).toBeInTheDocument();
+    });
+
+    const postCard = screen
+      .getByText("Needs review post")
+      .closest("div.border")!;
+    fireEvent.click(postCard);
+    await waitFor(() => {
+      expect(screen.getByText("Discussion State")).toBeInTheDocument();
+    });
+
+    const detailFetchCount = fetchMock.mock.calls.filter(
+      ([url]) => url === "/api/posts/1",
+    ).length;
+
+    // Clicking the already-selected card must be a no-op: no extra fetch,
+    // and the detail panel stays rendered (no stranded loading spinner).
+    fireEvent.click(postCard);
+    expect(
+      fetchMock.mock.calls.filter(([url]) => url === "/api/posts/1").length,
+    ).toBe(detailFetchCount);
+    expect(screen.getByText("Discussion State")).toBeInTheDocument();
+  });
+
   it("displays BOOST_VISIBILITY category correctly", async () => {
     const boostPosts = [
       {
