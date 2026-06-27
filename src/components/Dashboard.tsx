@@ -501,6 +501,17 @@ export function Dashboard() {
   );
   const [detailsLoading, setDetailsLoading] = React.useState(false);
 
+  const handleSelectPost = React.useCallback((id: number) => {
+    setSelectedPostId(id);
+    setDetailsLoading(true);
+  }, []);
+
+  const handleClosePost = React.useCallback(() => {
+    setSelectedPostId(null);
+    setPostDetails(null);
+    setDetailsLoading(false);
+  }, []);
+
   React.useEffect(() => {
     fetch("/api/posts")
       .then((res) => {
@@ -517,29 +528,32 @@ export function Dashboard() {
   }, []);
 
   React.useEffect(() => {
-    if (selectedPostId) {
-      setDetailsLoading(true);
-      fetch(`/api/posts/${selectedPostId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setPostDetails(data);
-          setDetailsLoading(false);
-        })
-        .catch(() => setDetailsLoading(false));
-    } else {
-      setPostDetails(null);
-    }
+    if (!selectedPostId) return;
+    let ignore = false;
+    fetch(`/api/posts/${selectedPostId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (ignore) return;
+        setPostDetails(data);
+        setDetailsLoading(false);
+      })
+      .catch(() => {
+        if (!ignore) setDetailsLoading(false);
+      });
+    return () => {
+      ignore = true;
+    };
   }, [selectedPostId]);
 
   /* Close detail panel on Escape key */
   React.useEffect(() => {
     if (!selectedPostId) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelectedPostId(null);
+      if (e.key === "Escape") handleClosePost();
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [selectedPostId]);
+  }, [selectedPostId, handleClosePost]);
 
   if (loading) {
     return (
@@ -622,7 +636,7 @@ export function Dashboard() {
               >
                 <QueueCard
                   selected={selectedPostId === post.id}
-                  onClick={() => setSelectedPostId(post.id)}
+                  onClick={() => handleSelectPost(post.id)}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
@@ -670,8 +684,8 @@ export function Dashboard() {
             selectedPostId={selectedPostId}
             detailsLoading={detailsLoading}
             postDetails={postDetails}
-            onBack={() => setSelectedPostId(null)}
-            onClose={() => setSelectedPostId(null)}
+            onBack={handleClosePost}
+            onClose={handleClosePost}
           />
         </section>
       )}
