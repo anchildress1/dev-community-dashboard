@@ -72,6 +72,25 @@
   --font-mono:
     var(--font-jetbrains-mono), ui-monospace, "SF Mono", menlo, consolas,
     monospace;
+
+  /* ── Radius scale — corner language; rebrand swaps these once ─ */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-pill: 9999px;
+
+  /* ── Motion easing — Tailwind ease-* utilities ─────────────── */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+
+  /* ── Elevation — flat today; tier exists so a rebrand can lift ─ */
+  --shadow-flat: 0 0 0 0 transparent;
+  --shadow-raised: 0 1px 2px
+    color-mix(in oklch, var(--text-primary), transparent 92%);
+  --shadow-overlay: 0 4px 12px
+    color-mix(in oklch, var(--text-primary), transparent 88%);
 }
 
 /*
@@ -83,6 +102,19 @@
  */
 @layer base {
   :root {
+    /* Motion durations — theme-independent (consumed via var()) */
+    --duration-instant: 0.1s;
+    --duration-fast: 0.15s;
+    --duration-base: 0.2s;
+    --duration-slow: 0.3s;
+
+    /* Z-index scale — single source of stacking order */
+    --z-base: 0;
+    --z-raised: 10;
+    --z-sticky: 100;
+    --z-overlay: 1000;
+    --z-modal: 1100;
+
     /* Tone palette (shared identity across themes) */
     --t-lime: oklch(72% 0.16 145deg);
     --t-azure: oklch(66% 0.15 240deg);
@@ -288,8 +320,8 @@
   /* Card hover lift — subtle background shift, no transform */
   .card-lift {
     transition:
-      background 0.15s ease,
-      border-color 0.15s ease;
+      background var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard);
   }
 
   .card-lift:hover {
@@ -301,6 +333,19 @@
     box-shadow: inset 3px 0 0 var(--accent-primary);
     border-color: var(--accent-primary);
     background: color-mix(in oklch, var(--accent-primary), transparent 94%);
+  }
+
+  /* Elevation utilities — flat by default; rebrand reskins via --shadow-* */
+  .elevation-flat {
+    box-shadow: var(--shadow-flat);
+  }
+
+  .elevation-raised {
+    box-shadow: var(--shadow-raised);
+  }
+
+  .elevation-overlay {
+    box-shadow: var(--shadow-overlay);
   }
 
   /* Scroll fade for queue list */
