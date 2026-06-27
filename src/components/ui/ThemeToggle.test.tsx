@@ -42,7 +42,7 @@ beforeEach(() => {
   prefersDark = false;
   listeners.length = 0;
   delete storage.theme;
-  document.documentElement.classList.remove("dark", "paper");
+  document.documentElement.classList.remove("dark");
 });
 
 afterEach(() => {
@@ -56,7 +56,7 @@ describe("ThemeToggle", () => {
     expect(btn).toBeInTheDocument();
   });
 
-  it("cycles light → dark → paper → system → light", () => {
+  it("cycles light → dark → system → light", () => {
     render(<ThemeToggle />);
     const btn = screen.getByRole("button");
 
@@ -68,16 +68,10 @@ describe("ThemeToggle", () => {
     expect(btn).toHaveAccessibleName("Dark mode");
     expect(document.documentElement.classList.contains("dark")).toBe(true);
 
-    // Click → paper
-    fireEvent.click(btn);
-    expect(btn).toHaveAccessibleName("Paper mode");
-    expect(document.documentElement.classList.contains("paper")).toBe(true);
-    expect(document.documentElement.classList.contains("dark")).toBe(false);
-
     // Click → system
     fireEvent.click(btn);
     expect(btn).toHaveAccessibleName("System theme");
-    expect(document.documentElement.classList.contains("paper")).toBe(false);
+    expect(document.documentElement.classList.contains("dark")).toBe(false);
 
     // Click → light
     fireEvent.click(btn);
@@ -91,9 +85,6 @@ describe("ThemeToggle", () => {
 
     fireEvent.click(btn); // → dark
     expect(mockLocalStorage.setItem).toHaveBeenCalledWith("theme", "dark");
-
-    fireEvent.click(btn); // → paper
-    expect(mockLocalStorage.setItem).toHaveBeenCalledWith("theme", "paper");
 
     fireEvent.click(btn); // → system
     expect(mockLocalStorage.setItem).toHaveBeenCalledWith("theme", "system");
@@ -122,24 +113,15 @@ describe("ThemeToggle", () => {
     expect(document.documentElement.classList.contains("dark")).toBe(true);
   });
 
-  it("restores paper mode from localStorage on mount", () => {
-    storage.theme = "paper";
-    render(<ThemeToggle />);
-    expect(screen.getByRole("button")).toHaveAccessibleName("Paper mode");
-    expect(document.documentElement.classList.contains("paper")).toBe(true);
-  });
-
   it("removes .dark class when switching to light", () => {
     storage.theme = "dark";
     render(<ThemeToggle />);
     expect(document.documentElement.classList.contains("dark")).toBe(true);
 
     const btn = screen.getByRole("button");
-    fireEvent.click(btn); // → paper
     fireEvent.click(btn); // → system
     fireEvent.click(btn); // → light
     expect(document.documentElement.classList.contains("dark")).toBe(false);
-    expect(document.documentElement.classList.contains("paper")).toBe(false);
   });
 
   it("reacts to system preference changes in system mode", () => {

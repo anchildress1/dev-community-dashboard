@@ -22,19 +22,16 @@ flowchart LR
   subgraph TH[Theme overrides]
     L[":root (light)"]
     D[".dark"]
-    PA[".paper"]
   end
   TW["@theme map<br/>--color-*, --font-*, --radius-*, --ease-*"]
   CMP[Components]
   T --> C
   C --> L
   C --> D
-  C --> PA
   T --> TW
   ST --> TW
   L --> TW
   D --> TW
-  PA --> TW
   TW --> CMP
 ```
 
@@ -56,7 +53,7 @@ Components reference **semantic** tokens only. Never a raw tone.
 
 ### 3. Theme overrides
 
-`:root` (light, default), `.dark`, `.paper`. Each redefines semantic values; `.paper` only overrides surfaces and inherits the rest. The active theme class is set on `<html>` by the inline script in [`layout.tsx`](../src/app/layout.tsx) (reads `localStorage.theme`: `light` | `dark` | `paper` | unset = system).
+`:root` (light, default) and `.dark`. Each redefines semantic values. The active theme class is set on `<html>` by the inline script in [`layout.tsx`](../src/app/layout.tsx) (reads `localStorage.theme`: `light` | `dark` | unset = system, which follows `prefers-color-scheme`).
 
 ### 4. Tailwind `@theme` map
 
@@ -79,7 +76,7 @@ A reskin should be a token edit, not a component sweep.
 2. **Retune semantic ramps** — adjust `--accent-*` and `--text-*`/`--surface-*` lightness for AA contrast on the new tones. Repeat for `.dark`.
 3. **Change corner language** — edit `--radius-*` once; everything using `rounded-*` updates.
 4. **Adjust motion / elevation** — edit `--ease-*`, `--duration-*`, `--shadow-*`. The app is flat today (`--shadow-flat`); a rebrand can lift surfaces by pointing `.elevation-*` utilities at richer shadows.
-5. **Verify contrast** — run the Lighthouse accessibility audit (min 90, per project rules) and check every theme: light, dark, paper.
+5. **Verify contrast** — run the Lighthouse accessibility audit (min 90, per project rules) and check both themes: light and dark.
 
 ## Hard rules
 

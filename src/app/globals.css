@@ -241,21 +241,6 @@
 
     color-scheme: dark;
   }
-
-  /*
-   * ── Paper mode — warm cream third theme ─────────────────────
-   *
-   * Cream surfaces, ink text. Inherits everything else from
-   * :root (text scale, accent, badges) so the tone identity
-   * stays consistent across themes.
-   */
-  .paper {
-    --surface-primary: oklch(96% 0.014 80deg);
-    --surface-secondary: oklch(94% 0.016 80deg);
-    --surface-raised: oklch(92% 0.018 80deg);
-    --surface-border: oklch(88% 0.014 80deg);
-    --paper-clue: oklch(98.5% 0.01 80deg);
-  }
 }
 
 @layer base {

@@ -44,9 +44,8 @@ const themeScript = `
     var t = localStorage.getItem("theme");
     var prefersDark = matchMedia("(prefers-color-scheme:dark)").matches;
     var root = document.documentElement;
-    root.classList.remove("dark", "paper");
-    if (t === "paper") root.classList.add("paper");
-    else if (t === "dark" || (t !== "light" && prefersDark)) root.classList.add("dark");
+    root.classList.remove("dark");
+    if (t === "dark" || (t !== "light" && prefersDark)) root.classList.add("dark");
   } catch(e) {}
 })();
 `;
