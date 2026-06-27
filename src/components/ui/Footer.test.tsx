@@ -8,10 +8,13 @@ describe("Footer", () => {
     expect(screen.getByText(/Interaction scoring by/)).toBeInTheDocument();
   });
 
-  it("renders the copyright notice", () => {
+  it("renders the copyright notice with the current year", () => {
     render(<Footer />);
+    const year = new Date().getFullYear();
     expect(
-      screen.getByText(/© 2026 ChecKMarK DevTools \| Ashley Childress/),
+      screen.getByText(
+        new RegExp(`© ${year} ChecKMarK DevTools & Ashley\\s+Childress`),
+      ),
     ).toBeInTheDocument();
   });
 

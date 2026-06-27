@@ -403,10 +403,12 @@ describe("Dashboard Component", () => {
       expect(screen.getByText("dev/signal")).toBeInTheDocument();
     });
 
-    const feedbackLink = screen.getByLabelText("Feedback on GitHub");
+    const feedbackLink = screen.getByLabelText(
+      "Report an issue on GitHub (opens in a new tab)",
+    );
     expect(feedbackLink).toHaveAttribute(
       "href",
-      "https://github.com/ChecKMarKDevTools/dev-community-dashboard/issues",
+      "https://github.com/anchildress1/dev-community-dashboard/issues",
     );
     expect(feedbackLink).toHaveAttribute("target", "_blank");
     expect(feedbackLink).toHaveAttribute("rel", "noopener noreferrer");

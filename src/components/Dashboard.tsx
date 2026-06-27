@@ -12,13 +12,7 @@ import { PostMeta } from "@/components/ui/PostMeta";
 import { SectionCard } from "@/components/ui/SectionCard";
 import { QueueCard } from "@/components/ui/QueueCard";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import {
-  AlertCircle,
-  ChevronRight,
-  ExternalLink,
-  MessageSquare,
-  X,
-} from "lucide-react";
+import { AlertCircle, ChevronRight, MessageSquare, X } from "lucide-react";
 import { Footer } from "@/components/ui/Footer";
 import { cn } from "@/lib/utils";
 import {
@@ -607,14 +601,14 @@ export function Dashboard() {
           <nav aria-label="Site actions" className="flex items-center gap-1">
             <ThemeToggle />
             <a
-              href="https://github.com/ChecKMarKDevTools/dev-community-dashboard/issues"
+              href="https://github.com/anchildress1/dev-community-dashboard/issues"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Feedback on GitHub"
-              className="text-text-muted hover:text-text-primary inline-flex items-center gap-1.5 rounded-lg p-2 text-xs font-medium transition-colors"
+              aria-label="Report an issue on GitHub (opens in a new tab)"
+              title="Report an issue"
+              className="text-text-muted hover:text-text-primary rounded-lg p-2 transition-colors"
             >
-              <MessageSquare className="h-4 w-4" aria-hidden="true" />
-              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              <MessageSquare className="h-5 w-5" aria-hidden="true" />
             </a>
           </nav>
         </header>
