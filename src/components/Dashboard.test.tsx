@@ -160,8 +160,8 @@ describe("Dashboard Component", () => {
     // and the detail panel stays rendered (no stranded loading spinner).
     fireEvent.click(postCard);
     expect(
-      fetchMock.mock.calls.filter(([url]) => url === "/api/posts/1").length,
-    ).toBe(detailFetchCount);
+      fetchMock.mock.calls.filter(([url]) => url === "/api/posts/1"),
+    ).toHaveLength(detailFetchCount);
     expect(screen.getByText("Discussion State")).toBeInTheDocument();
   });
 
@@ -500,7 +500,7 @@ describe("Dashboard Component", () => {
       // Qualitative labels instead of "X pts"
       // Heat 12 >= 10 = Elevated, Risk 5 >= 4 = Elevated, Support 4 >= 4 = Elevated
       const highLabels = screen.getAllByText("Elevated");
-      expect(highLabels.length).toBe(3);
+      expect(highLabels).toHaveLength(3);
     });
 
     // High heat narrative

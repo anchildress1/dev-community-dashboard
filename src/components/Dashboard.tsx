@@ -12,7 +12,7 @@ import { PostMeta } from "@/components/ui/PostMeta";
 import { SectionCard } from "@/components/ui/SectionCard";
 import { QueueCard } from "@/components/ui/QueueCard";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { AlertCircle, ChevronRight, MessageSquare, X } from "lucide-react";
+import { AlertCircle, Bug, ChevronRight, X } from "lucide-react";
 import { Footer } from "@/components/ui/Footer";
 import { cn } from "@/lib/utils";
 import {
@@ -608,7 +608,7 @@ export function Dashboard() {
               title="Report an issue"
               className="text-text-muted hover:text-text-primary rounded-lg p-2 transition-colors"
             >
-              <MessageSquare className="h-5 w-5" aria-hidden="true" />
+              <Bug className="h-5 w-5" aria-hidden="true" />
             </a>
           </nav>
         </header>
