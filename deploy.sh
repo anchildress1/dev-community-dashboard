@@ -258,6 +258,7 @@ gcloud run deploy "$SERVICE_NAME" \
   --project "$PROJECT_ID" \
   --allow-unauthenticated \
   --port "$PORT" \
+  --max-instances 1 \
   --labels "env=$ENVIRONMENT" \
   --set-env-vars "^|^NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL|ALLOWED_ORIGINS=$ALLOWED_ORIGINS" \
   --set-secrets "$SECRET_REFS"
@@ -309,6 +310,24 @@ if [[ -n "${CUSTOM_DOMAIN:-}" ]]; then
     fi
   fi
 fi
+
+# ── Revision cleanup ─────────────────────────────────────────────────────────
+echo ""
+echo "--- Cleaning up old revisions ---"
+ACTIVE_REVISION=$(gcloud run services describe "$SERVICE_NAME" \
+  --region "$REGION" --project "$PROJECT_ID" \
+  --format='value(status.latestReadyRevisionName)')
+gcloud run revisions list \
+  --service "$SERVICE_NAME" \
+  --region "$REGION" \
+  --project "$PROJECT_ID" \
+  --format='value(metadata.name)' \
+  | grep -v "^${ACTIVE_REVISION}$" \
+  | while read -r rev; do
+      echo "  Deleting $rev..."
+      gcloud run revisions delete "$rev" \
+        --region "$REGION" --project "$PROJECT_ID" --quiet 2>&1 || true
+    done
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 echo ""
