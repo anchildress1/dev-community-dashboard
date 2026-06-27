@@ -1005,8 +1005,7 @@ async function deepScoreAndPersist(
   );
 
   const storedNeedsSupport = existingMetrics?.needs_support as
-    | boolean
-    | undefined;
+    boolean | undefined;
   const needs_support = resolveNeedsSupport(
     rawLlmResult,
     storedNeedsSupport,
