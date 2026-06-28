@@ -10,7 +10,8 @@ export function Footer() {
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
           {/* Left — Copyright */}
           <p className="text-text-muted text-xs">
-            &copy; 2026 ChecKMarK DevTools | Ashley Childress
+            &copy;{" "}
+            {`${new Date().getFullYear()} ChecKMarK DevTools & Ashley Childress`}
           </p>
 
           {/* Center — AI attribution */}

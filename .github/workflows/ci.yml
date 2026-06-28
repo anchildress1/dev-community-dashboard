@@ -76,8 +76,7 @@ jobs:
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9 # v7.0.0
-        # Skip if SONAR_TOKEN is not configured (e.g., in forks or dependabot PRs)
-        if: secrets.SONAR_TOKEN != ''
+        # Required gate — no `if:` guard, so a bad/missing token fails the run.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

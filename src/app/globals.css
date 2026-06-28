@@ -13,7 +13,7 @@
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
 
-  /* ── Accent ────────────────────────────────────────────────── */
+  /* ── Accent (lime) ─────────────────────────────────────────── */
   --color-accent-primary: var(--accent-primary);
   --color-accent-hover: var(--accent-hover);
   --color-accent-active: var(--accent-active);
@@ -39,22 +39,24 @@
   --color-focus-ring: var(--focus-ring);
   --color-selection-bg: var(--selection-bg);
 
-  /* ── Semantic badge palette (unchanged names for Badge.tsx) ── */
+  /* ── Tone palette — for signal chips, dots, accents ────────── */
+  --color-tone-lime: var(--t-lime);
+  --color-tone-azure: var(--t-azure);
+  --color-tone-violet: var(--t-violet);
+  --color-tone-rose: var(--t-rose);
+  --color-tone-warm: var(--t-warm);
+  --color-tone-neutral: var(--t-neutral);
+
+  /* ── Badge palette — tone-named variants with dots ─────────── */
   --color-neutral-200: var(--badge-neutral-bg);
   --color-neutral-300: var(--badge-neutral-hover);
   --color-neutral-700: var(--badge-neutral-text);
-  --color-info-100: var(--badge-info-bg);
-  --color-info-200: var(--badge-info-hover);
-  --color-info-700: var(--badge-info-text);
-  --color-teal-100: var(--badge-teal-bg);
-  --color-teal-200: var(--badge-teal-hover);
-  --color-teal-700: var(--badge-teal-text);
-  --color-attention-100: var(--badge-attention-bg);
-  --color-attention-200: var(--badge-attention-hover);
-  --color-attention-700: var(--badge-attention-text);
-  --color-critical-100: var(--badge-critical-bg);
-  --color-critical-200: var(--badge-critical-hover);
-  --color-critical-700: var(--badge-critical-text);
+  --color-lime-100: var(--badge-lime-bg);
+  --color-lime-200: var(--badge-lime-hover);
+  --color-lime-700: var(--badge-lime-text);
+  --color-warm-100: var(--badge-warm-bg);
+  --color-warm-200: var(--badge-warm-hover);
+  --color-warm-700: var(--badge-warm-text);
   --color-violet-100: var(--badge-violet-bg);
   --color-violet-200: var(--badge-violet-hover);
   --color-violet-700: var(--badge-violet-text);
@@ -63,231 +65,198 @@
   --color-rose-700: var(--badge-rose-text);
 
   /* ── Fonts ─────────────────────────────────────────────────── */
-  --font-heading: var(--font-marcellus), georgia, serif;
-  --font-body: var(--font-source-serif), georgia, serif;
+  --font-heading: var(--font-fraunces), "Playfair Display", georgia, serif;
+  --font-body:
+    var(--font-inter-tight), -apple-system, blinkmacsystemfont, system-ui,
+    sans-serif;
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, "SF Mono", menlo, consolas,
+    monospace;
+
+  /* ── Radius scale — corner language; rebrand swaps these once ─ */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-pill: 9999px;
+
+  /* ── Motion easing — Tailwind ease-* utilities ─────────────── */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+
+  /* ── Elevation — flat today; tier exists so a rebrand can lift ─ */
+  --shadow-flat: 0 0 0 0 transparent;
+  --shadow-raised: 0 1px 2px
+    color-mix(in oklch, var(--text-primary), transparent 92%);
+  --shadow-overlay: 0 4px 12px
+    color-mix(in oklch, var(--text-primary), transparent 88%);
 }
 
-/* ── Light mode (default) ────────────────────────────────────── */
+/*
+ * ── Light mode (default) — warm off-white + ink + lime ────────
+ *
+ * Editorial palette: warm cream surfaces, deep ink text,
+ * lime accent for signal moments. All values use oklch for
+ * predictable tone-mixing across themes.
+ */
 @layer base {
   :root {
-    /* Surfaces */
-    --surface-primary: #f6f7fb;
-    --surface-secondary: #eef1f7;
-    --surface-raised: #e3e6f0;
-    --surface-border: #d7dbe7;
-    --paper-clue: #fff;
+    /* Motion durations — theme-independent (consumed via var()) */
+    --duration-instant: 0.1s;
+    --duration-fast: 0.15s;
+    --duration-base: 0.2s;
+    --duration-slow: 0.3s;
 
-    /* Text */
-    --text-primary: #1e2230;
-    --text-secondary: #4b5266;
+    /* Z-index scale — single source of stacking order */
+    --z-base: 0;
+    --z-raised: 10;
+    --z-sticky: 100;
+    --z-overlay: 1000;
+    --z-modal: 1100;
 
-    /* #5c6478: 5.8:1 on white, 4.9:1 on --surface-raised (#e3e6f0) — WCAG AA */
-    --text-muted: #5c6478;
+    /* Tone palette (shared identity across themes) */
+    --t-lime: oklch(72% 0.16 145deg);
+    --t-azure: oklch(66% 0.15 240deg);
+    --t-violet: oklch(62% 0.17 300deg);
+    --t-rose: oklch(66% 0.18 25deg);
+    --t-warm: oklch(72% 0.13 60deg);
+    --t-neutral: oklch(62% 0.005 60deg);
 
-    /* Accent — charcoal blue */
-    --accent-primary: #475569;
-    --accent-hover: #334155;
-    --accent-active: #1e293b;
-    --accent-soft: #f1f5f9;
-    --accent-strong: #94a3b8;
-    --accent-deep: #0f172a;
-    --accent-glow: #cbd5e1;
+    /* Surfaces — warm off-white scale */
+    --surface-primary: oklch(98.5% 0.004 80deg);
+    --surface-secondary: oklch(96.5% 0.005 80deg);
+    --surface-raised: oklch(94% 0.006 80deg);
+    --surface-border: oklch(92% 0.005 80deg);
+    --paper-clue: oklch(99.2% 0.003 80deg);
 
-    /* State — desaturated, accessible palette */
-    --state-positive: #5b7a6e;
-    --state-negative: #7a5b5e;
-    --state-warning: #64748b;
+    /* Text — warm ink scale (WCAG AA on warm surfaces) */
+    --text-primary: oklch(18% 0.005 60deg);
+    --text-secondary: oklch(42% 0.005 60deg);
+    --text-muted: oklch(55% 0.005 60deg);
 
-    /* Soft slate blue replacing yellow */
-    --state-info: #5b687a;
+    /* Accent — lime, darkened for AA contrast on light */
+    --accent-primary: oklch(52% 0.18 145deg);
+    --accent-hover: oklch(46% 0.18 145deg);
+    --accent-active: oklch(40% 0.18 145deg);
+    --accent-soft: color-mix(in oklch, var(--t-lime), transparent 88%);
+    --accent-strong: oklch(64% 0.16 145deg);
+    --accent-deep: oklch(34% 0.18 145deg);
+    --accent-glow: color-mix(in oklch, var(--t-lime), transparent 70%);
 
-    /* Chart — No warm/yellow hues */
-    --chart-grid: #e3e6f0;
-    --chart-axis: #8c92a8;
-    --chart-series-primary: #475569;
+    /* State indicators — mapped to tone palette */
+    --state-positive: var(--t-lime);
+    --state-negative: var(--t-rose);
+    --state-warning: var(--t-warm);
+    --state-info: var(--t-azure);
 
-    /* Slate 600 */
-    --chart-series-secondary: #0ea5e9;
-
-    /* Sky 500 */
-    --chart-series-tertiary: #64748b;
-
-    /* Slate 500 replacing 8a7a5b */
+    /* Chart series — drawn from tone palette */
+    --chart-grid: oklch(92% 0.005 80deg);
+    --chart-axis: oklch(55% 0.005 60deg);
+    --chart-series-primary: var(--t-lime);
+    --chart-series-secondary: var(--t-azure);
+    --chart-series-tertiary: var(--t-violet);
 
     /* Interactive */
-    --focus-ring: #475569;
-    --selection-bg: #e2e8f0;
+    --focus-ring: oklch(52% 0.18 145deg);
+    --selection-bg: color-mix(in oklch, var(--t-lime), transparent 80%);
 
-    /* Badge palette — neutral identifiers, not danger/warning labels */
-    --badge-neutral-bg: #e3e6f0;
-    --badge-neutral-hover: #d7dbe7;
-    --badge-neutral-text: #4b5266;
-    --badge-info-bg: #dce8f5;
-    --badge-info-hover: #c8dbf0;
-    --badge-info-text: #2e5a8a;
-    --badge-teal-bg: #ddf0ed;
-    --badge-teal-hover: #c8e6e1;
-    --badge-teal-text: #2b6058;
-    --badge-attention-bg: #e0e7ff;
-    --badge-attention-hover: #c7d2fe;
-    --badge-attention-text: #4338ca;
-    --badge-critical-bg: #e2e8f0;
-    --badge-critical-hover: #cbd5e1;
-    --badge-critical-text: #334155;
+    /* Badge palette — color-mixed from tones (WCAG AA) */
+    --badge-neutral-bg: oklch(94% 0.006 80deg);
+    --badge-neutral-hover: oklch(90% 0.006 80deg);
+    --badge-neutral-text: oklch(42% 0.005 60deg);
+    --badge-lime-bg: color-mix(in oklch, var(--t-lime), transparent 88%);
+    --badge-lime-hover: color-mix(in oklch, var(--t-lime), transparent 80%);
+    --badge-lime-text: oklch(38% 0.16 145deg);
+    --badge-warm-bg: color-mix(in oklch, var(--t-warm), transparent 84%);
+    --badge-warm-hover: color-mix(in oklch, var(--t-warm), transparent 75%);
+    --badge-warm-text: oklch(38% 0.13 60deg);
+    --badge-violet-bg: color-mix(in oklch, var(--t-violet), transparent 88%);
+    --badge-violet-hover: color-mix(in oklch, var(--t-violet), transparent 80%);
+    --badge-violet-text: oklch(40% 0.17 300deg);
+    --badge-rose-bg: color-mix(in oklch, var(--t-rose), transparent 88%);
+    --badge-rose-hover: color-mix(in oklch, var(--t-rose), transparent 80%);
+    --badge-rose-text: oklch(42% 0.18 25deg);
 
-    /* #5b21b6 on #ede9fe: 7.6:1 — WCAG AA */
-    --badge-violet-bg: #ede9fe;
-    --badge-violet-hover: #ddd6fe;
-    --badge-violet-text: #5b21b6;
-
-    /* #ad1457 on #fce4ec: 7.2:1 — WCAG AA */
-    --badge-rose-bg: #fce4ec;
-    --badge-rose-hover: #f8bbd0;
-    --badge-rose-text: #ad1457;
-
-    /* Gradient */
-    --gradient-from: #f6f7fb;
-    --gradient-via: #eef1f7;
-    --gradient-to: #e3e6f0;
-
-    /* Card (used by Card.tsx via bg-card / text-card-foreground) */
-    --background: #f6f7fb;
-    --foreground: #1e2230;
-    --card: #fff;
-    --card-foreground: #1e2230;
-    --border: #d7dbe7;
+    /* Card mappings (used by Card.tsx via bg-card / text-card-foreground) */
+    --background: var(--surface-primary);
+    --foreground: var(--text-primary);
+    --card: var(--paper-clue);
+    --card-foreground: var(--text-primary);
+    --border: var(--surface-border);
   }
 
-  /*
-   * ── Dark mode — charcoal-blue base with violet accent ─────
+  /* ── Dark mode — deep ink, brighter lime ─────────────────────
    *
-   * Deep navy-charcoal surfaces create the foundation.
-   * Purple is a *touch*, not the dominant hue.
-   * Glass-morphic translucency handled by component utilities below.
+   * Flat charcoal surfaces (no gradient orbs). Lime accent
+   * shifts brighter for AA contrast against deep ink.
    */
   .dark {
-    /* Surfaces — deep charcoal with blue undertone */
-    --surface-primary: #0b0f1a;
-    --surface-secondary: #111827;
-    --surface-raised: #1a2035;
-    --surface-border: #232d44;
-    --paper-clue: #111827;
+    --surface-primary: oklch(16% 0.005 60deg);
+    --surface-secondary: oklch(20% 0.005 60deg);
+    --surface-raised: oklch(24% 0.005 60deg);
+    --surface-border: oklch(28% 0.005 60deg);
+    --paper-clue: oklch(22% 0.005 60deg);
+    --text-primary: oklch(96% 0.003 80deg);
+    --text-secondary: oklch(78% 0.005 60deg);
+    --text-muted: oklch(62% 0.006 60deg);
+    --accent-primary: oklch(78% 0.16 145deg);
+    --accent-hover: oklch(84% 0.16 145deg);
+    --accent-active: oklch(72% 0.16 145deg);
+    --accent-soft: color-mix(in oklch, var(--t-lime), transparent 80%);
+    --accent-strong: oklch(85% 0.18 145deg);
+    --accent-deep: oklch(55% 0.16 145deg);
+    --accent-glow: color-mix(in oklch, var(--t-lime), transparent 70%);
+    --state-positive: oklch(80% 0.16 145deg);
+    --state-negative: oklch(75% 0.18 25deg);
+    --state-warning: oklch(80% 0.13 60deg);
+    --state-info: oklch(75% 0.15 240deg);
+    --chart-grid: oklch(28% 0.005 60deg);
+    --chart-axis: oklch(55% 0.005 60deg);
+    --chart-series-primary: oklch(78% 0.16 145deg);
+    --chart-series-secondary: oklch(76% 0.15 240deg);
+    --chart-series-tertiary: oklch(72% 0.17 300deg);
+    --focus-ring: oklch(78% 0.16 145deg);
+    --selection-bg: color-mix(in oklch, var(--t-lime), transparent 70%);
+    --badge-neutral-bg: oklch(24% 0.005 60deg);
+    --badge-neutral-hover: oklch(30% 0.005 60deg);
+    --badge-neutral-text: oklch(78% 0.005 60deg);
+    --badge-lime-bg: color-mix(in oklch, var(--t-lime), transparent 78%);
+    --badge-lime-hover: color-mix(in oklch, var(--t-lime), transparent 68%);
+    --badge-lime-text: oklch(82% 0.16 145deg);
+    --badge-warm-bg: color-mix(in oklch, var(--t-warm), transparent 70%);
+    --badge-warm-hover: color-mix(in oklch, var(--t-warm), transparent 60%);
+    --badge-warm-text: oklch(85% 0.13 60deg);
+    --badge-violet-bg: color-mix(in oklch, var(--t-violet), transparent 78%);
+    --badge-violet-hover: color-mix(in oklch, var(--t-violet), transparent 68%);
+    --badge-violet-text: oklch(78% 0.16 300deg);
+    --badge-rose-bg: color-mix(in oklch, var(--t-rose), transparent 78%);
+    --badge-rose-hover: color-mix(in oklch, var(--t-rose), transparent 68%);
+    --badge-rose-text: oklch(78% 0.16 25deg);
+    --background: var(--surface-primary);
+    --foreground: var(--text-primary);
+    --card: var(--paper-clue);
+    --card-foreground: var(--text-primary);
+    --border: var(--surface-border);
 
-    /* Text — soft white, no eye strain */
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
-
-    /* Accent — cool blue */
-    --accent-primary: #60a5fa;
-    --accent-hover: #93c5fd;
-    --accent-active: #3b82f6;
-    --accent-soft: #1e3a8a;
-    --accent-strong: #bfdbfe;
-    --accent-deep: #172554;
-    --accent-glow: #60a5fa;
-
-    /* State — muted but distinguishable against charcoal */
-    --state-positive: #5b9e82;
-    --state-negative: #9e5b6e;
-    --state-warning: #38bdf8;
-
-    /* Sky blue replacing mustard yellow */
-    --state-info: #5e8cb8;
-
-    /* Chart — Cool palette */
-    --chart-grid: #1a2035;
-    --chart-axis: #6b7280;
-    --chart-series-primary: #38bdf8;
-
-    /* Sky 400 */
-    --chart-series-secondary: #818cf8;
-
-    /* Indigo 400 */
-    --chart-series-tertiary: #2dd4bf;
-
-    /* Teal 400 */
-
-    /* Interactive */
-    --focus-ring: #60a5fa;
-    --selection-bg: #1e3a8a;
-
-    /* Badge palette — dark-mode safe, distinct from accent/selection state */
-    --badge-neutral-bg: #1e2435;
-    --badge-neutral-hover: #272e42;
-    --badge-neutral-text: #a0a8ba;
-    --badge-info-bg: #142538;
-    --badge-info-hover: #1a3048;
-    --badge-info-text: #6eaad8;
-    --badge-teal-bg: #0e2826;
-    --badge-teal-hover: #163533;
-    --badge-teal-text: #52d9c0;
-    --badge-attention-bg: #1e1b4b;
-    --badge-attention-hover: #312e81;
-    --badge-attention-text: #818cf8;
-    --badge-critical-bg: #1e293b;
-    --badge-critical-hover: #334155;
-    --badge-critical-text: #94a3b8;
-
-    /* #d8b4fe on #2e1065: 9.1:1 — WCAG AA */
-    --badge-violet-bg: #2e1065;
-    --badge-violet-hover: #3b0764;
-    --badge-violet-text: #d8b4fe;
-
-    /* #f48fb1 on #4a1525: 6.3:1 — WCAG AA */
-    --badge-rose-bg: #4a1525;
-    --badge-rose-hover: #5c1a30;
-    --badge-rose-text: #f48fb1;
-
-    /* Gradient helpers */
-    --gradient-from: #0b0f1a;
-    --gradient-via: #111827;
-    --gradient-to: #0b0f1a;
-
-    /* Card */
-    --background: #0b0f1a;
-    --foreground: #e9ecf1;
-    --card: #111827;
-    --card-foreground: #e9ecf1;
-    --border: #232d44;
+    color-scheme: dark;
   }
 }
 
 @layer base {
   body {
-    background:
-      linear-gradient(
-        135deg,
-        var(--gradient-from) 0%,
-        var(--gradient-via) 50%,
-        var(--gradient-to) 100%
-      ),
-      var(--background);
+    background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-body), georgia, serif;
+    font-family:
+      var(--font-body),
+      -apple-system,
+      system-ui,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /*
-   * Dark mode: ambient gradient orbs behind the UI.
-   * Subtle teal and blue glows give the page depth and life
-   * without overpowering the charcoal surface.
-   */
-  .dark body {
-    background:
-      radial-gradient(
-        ellipse at 15% 0%,
-        rgb(56 189 248 / 8%) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        ellipse at 85% 100%,
-        rgb(45 212 191 / 8%) 0%,
-        transparent 50%
-      ),
-      #0b0f1a;
-  }
-
-  /* Accessible focus ring — WCAG 2.1 AA compliant outline */
+  /* Accessible focus ring — WCAG 2.1 AA */
   button:focus-visible,
   a:focus-visible,
   [tabindex]:focus-visible,
@@ -296,7 +265,6 @@
     outline-offset: 2px;
   }
 
-  /* Global selection styling for accessibility */
   ::selection {
     background-color: var(--selection-bg);
     color: var(--text-primary);
@@ -304,113 +272,68 @@
 }
 
 /*
- * ── Glassmorphism & interaction utilities ───────────────────
+ * ── Component utilities ──────────────────────────────────────
  *
- * 2026 dark-glass aesthetic: translucent surfaces over ambient
- * gradients, backdrop-blur, soft borders, deep layered shadows.
- * Light mode keeps traditional opaque cards with subtle depth.
+ * Flat surfaces with subtle borders. No backdrop-blur — the
+ * editorial palette wants flat panels, not glassmorphism.
  */
 @layer utilities {
-  /* ── Glass card treatment (dark mode only) ─────────────── */
+  /* Card surface: flat panel, identical across themes */
   .glass-surface {
-    /* Light mode: no-op, cards are opaque */
+    border-color: var(--surface-border);
+    background: var(--paper-clue);
   }
 
-  .dark .glass-surface {
-    /* stylelint-disable-next-line property-no-vendor-prefix -- Safari requires -webkit- prefix for backdrop-filter */
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    box-shadow:
-      0 8px 32px rgb(0 0 0 / 30%),
-      inset 0 1px 0 rgb(255 255 255 / 5%);
-    border-color: rgb(255 255 255 / 8%);
-    background: rgb(255 255 255 / 4%);
-  }
-
-  /* ── Glass panel (sidebar, larger surfaces) ────────────── */
+  /* Larger panel surface (sidebar/aside) */
   .glass-panel {
-    /* Light mode: standard surface */
+    border-color: var(--surface-border);
+    background: var(--paper-clue);
   }
 
-  .dark .glass-panel {
-    /* stylelint-disable-next-line property-no-vendor-prefix -- Safari requires -webkit- prefix for backdrop-filter */
-    -webkit-backdrop-filter: blur(16px);
-    backdrop-filter: blur(16px);
-    border-color: rgb(255 255 255 / 6%);
-    background: rgb(17 24 39 / 80%);
-  }
-
-  /* ── Header glass bar ──────────────────────────────────── */
+  /* Topbar/header bar */
   .header-glass {
-    background: linear-gradient(
-      to right,
-      var(--surface-secondary),
-      var(--surface-raised),
-      var(--surface-secondary)
-    );
+    border-color: var(--surface-border);
+    background: var(--paper-clue);
   }
 
-  .dark .header-glass {
-    /* stylelint-disable-next-line property-no-vendor-prefix -- Safari requires -webkit- prefix for backdrop-filter */
-    -webkit-backdrop-filter: blur(16px);
-    backdrop-filter: blur(16px);
-    box-shadow: 0 4px 24px rgb(0 0 0 / 25%);
-    border-color: rgb(255 255 255 / 10%);
-    background: linear-gradient(
-      135deg,
-      rgb(22 30 50 / 95%) 0%,
-      rgb(35 48 70 / 90%) 50%,
-      rgb(22 30 50 / 95%) 100%
-    );
+  /* Footer bar */
+  .footer-glass {
+    border-color: var(--surface-border);
+    background: var(--paper-clue);
   }
 
-  /* ── Card hover lift ───────────────────────────────────── */
+  /* Card hover lift — subtle background shift, no transform */
   .card-lift {
     transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease,
-      border-color 0.2s ease,
-      background 0.2s ease;
+      background var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard);
   }
 
   .card-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgb(0 0 0 / 10%);
+    background: var(--surface-secondary);
   }
 
-  .dark .card-lift:hover {
-    box-shadow:
-      0 12px 40px rgb(0 0 0 / 40%),
-      0 0 0 1px rgb(255 255 255 / 8%);
-    border-color: rgb(255 255 255 / 12%);
-    background: rgb(255 255 255 / 6%);
+  /* Selected card — accent side strip + tinted background */
+  .card-active {
+    box-shadow: inset 3px 0 0 var(--accent-primary);
+    border-color: var(--accent-primary);
+    background: color-mix(in oklch, var(--accent-primary), transparent 94%);
   }
 
-  /* ── Footer glass bar ─────────────────────────────────── */
-  .footer-glass {
-    background: linear-gradient(
-      to right,
-      var(--surface-secondary),
-      var(--surface-raised),
-      var(--surface-secondary)
-    );
+  /* Elevation utilities — flat by default; rebrand reskins via --shadow-* */
+  .elevation-flat {
+    box-shadow: var(--shadow-flat);
   }
 
-  .dark .footer-glass {
-    /* stylelint-disable-next-line property-no-vendor-prefix -- Safari requires -webkit- prefix for backdrop-filter */
-    -webkit-backdrop-filter: blur(16px);
-    backdrop-filter: blur(16px);
-    box-shadow: 0 -4px 24px rgb(0 0 0 / 20%);
-    border-color: rgb(255 255 255 / 10%);
-    background: linear-gradient(
-      135deg,
-      rgb(22 30 50 / 90%) 0%,
-      rgb(35 48 70 / 85%) 50%,
-      rgb(22 30 50 / 90%) 100%
-    );
+  .elevation-raised {
+    box-shadow: var(--shadow-raised);
   }
 
-  /* ── Scroll fade: subtle top/bottom gradient hints ────── */
+  .elevation-overlay {
+    box-shadow: var(--shadow-overlay);
+  }
+
+  /* Scroll fade for queue list */
   .scroll-fade {
     /* stylelint-disable-next-line property-no-vendor-prefix -- Safari requires -webkit- prefix for mask-image */
     -webkit-mask-image: linear-gradient(
@@ -427,23 +350,5 @@
       black 97%,
       transparent 100%
     );
-  }
-
-  /* ── Selected card: accent-tinted glass + glow ring ────── */
-  .card-active {
-    box-shadow:
-      0 0 0 1px var(--accent-primary),
-      0 8px 24px rgb(0 0 0 / 10%);
-    border-color: var(--accent-primary);
-    background-color: var(--accent-soft);
-  }
-
-  .dark .card-active {
-    box-shadow:
-      0 0 0 1px rgb(96 165 250 / 30%),
-      0 0 20px rgb(96 165 250 / 10%),
-      0 8px 32px rgb(0 0 0 / 30%);
-    border-color: rgb(96 165 250 / 40%);
-    background: rgb(96 165 250 / 10%);
   }
 }

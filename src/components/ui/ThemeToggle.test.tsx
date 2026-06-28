@@ -71,6 +71,7 @@ describe("ThemeToggle", () => {
     // Click → system
     fireEvent.click(btn);
     expect(btn).toHaveAccessibleName("System theme");
+    expect(document.documentElement.classList.contains("dark")).toBe(false);
 
     // Click → light
     fireEvent.click(btn);

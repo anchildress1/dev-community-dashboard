@@ -88,14 +88,14 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      expect(screen.queryByText("DEV Community Dashboard")).toBeInTheDocument();
+      expect(screen.queryByText("dev/signal")).toBeInTheDocument();
     });
 
     expect(screen.getByText("Needs review post")).toBeInTheDocument();
     expect(screen.getByText("Normal post")).toBeInTheDocument();
-    // New analyst-briefing labels
-    expect(screen.getByText("Rapid Discussion")).toBeInTheDocument();
-    expect(screen.getByText("Steady Signal")).toBeInTheDocument();
+    // New analyst-briefing labels (also appear in the intro legend)
+    expect(screen.getAllByText("Rapid Discussion").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Steady Signal").length).toBeGreaterThan(0);
   });
 
   it("handles post selection and fetching details", async () => {
@@ -129,6 +129,42 @@ describe("Dashboard Component", () => {
     expect(moderateLabels.length).toBeGreaterThanOrEqual(2);
   });
 
+  it("does not re-fetch or re-load when the selected card is clicked again", async () => {
+    const fetchMock = vi.fn().mockImplementation((url) => {
+      if (url === "/api/posts")
+        return Promise.resolve({ ok: true, json: async () => mockPosts });
+      if (url === "/api/posts/1")
+        return Promise.resolve({ ok: true, json: async () => mockPostDetails });
+      return Promise.reject(new Error("Not found"));
+    });
+    globalThis.fetch = fetchMock as Mock;
+
+    render(<Dashboard />);
+    await waitFor(() => {
+      expect(screen.getByText("Needs review post")).toBeInTheDocument();
+    });
+
+    const postCard = screen
+      .getByText("Needs review post")
+      .closest("div.border")!;
+    fireEvent.click(postCard);
+    await waitFor(() => {
+      expect(screen.getByText("Discussion State")).toBeInTheDocument();
+    });
+
+    const detailFetchCount = fetchMock.mock.calls.filter(
+      ([url]) => url === "/api/posts/1",
+    ).length;
+
+    // Clicking the already-selected card must be a no-op: no extra fetch,
+    // and the detail panel stays rendered (no stranded loading spinner).
+    fireEvent.click(postCard);
+    expect(
+      fetchMock.mock.calls.filter(([url]) => url === "/api/posts/1"),
+    ).toHaveLength(detailFetchCount);
+    expect(screen.getByText("Discussion State")).toBeInTheDocument();
+  });
+
   it("displays BOOST_VISIBILITY category correctly", async () => {
     const boostPosts = [
       {
@@ -150,8 +186,8 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      // BOOST_VISIBILITY triggers "Trending Signal" badge
-      expect(screen.getByText("Trending Signal")).toBeInTheDocument();
+      // BOOST_VISIBILITY triggers "Trending Signal" badge (label also in legend)
+      expect(screen.getAllByText("Trending Signal").length).toBeGreaterThan(0);
     });
   });
 
@@ -176,8 +212,10 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      // NEEDS_RESPONSE triggers "Awaiting Collaboration"
-      expect(screen.getByText("Awaiting Collaboration")).toBeInTheDocument();
+      // NEEDS_RESPONSE triggers "Awaiting Collaboration" (label also in legend)
+      expect(
+        screen.getAllByText("Awaiting Collaboration").length,
+      ).toBeGreaterThan(0);
     });
   });
 
@@ -202,12 +240,15 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      // NEEDS_SUPPORT triggers "Needs Support" badge
-      expect(screen.getByText("Needs Support")).toBeInTheDocument();
+      // NEEDS_SUPPORT triggers "Needs Support" badge (label also in legend)
+      expect(screen.getAllByText("Needs Support").length).toBeGreaterThan(0);
     });
 
-    // Verify the badge has the rose variant class
-    const badge = screen.getByText("Needs Support");
+    // Find the badge specifically (legend uses <strong>, badge uses bg-rose-100)
+    const badge = screen
+      .getAllByText("Needs Support")
+      .find((el) => el.classList.contains("bg-rose-100"));
+    expect(badge).toBeDefined();
     expect(badge).toHaveClass("bg-rose-100");
   });
 
@@ -232,8 +273,8 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      // SIGNAL_AT_RISK triggers "Anomalous Signal"
-      expect(screen.getByText("Anomalous Signal")).toBeInTheDocument();
+      // SIGNAL_AT_RISK triggers "Anomalous Signal" (label also in legend)
+      expect(screen.getAllByText("Anomalous Signal").length).toBeGreaterThan(0);
     });
   });
 
@@ -359,13 +400,15 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText("DEV Community Dashboard")).toBeInTheDocument();
+      expect(screen.getByText("dev/signal")).toBeInTheDocument();
     });
 
-    const feedbackLink = screen.getByText("Feedback").closest("a");
+    const feedbackLink = screen.getByLabelText(
+      "Report an issue on GitHub (opens in a new tab)",
+    );
     expect(feedbackLink).toHaveAttribute(
       "href",
-      "https://github.com/ChecKMarKDevTools/dev-community-dashboard/issues",
+      "https://github.com/anchildress1/dev-community-dashboard/issues",
     );
     expect(feedbackLink).toHaveAttribute("target", "_blank");
     expect(feedbackLink).toHaveAttribute("rel", "noopener noreferrer");
@@ -457,7 +500,7 @@ describe("Dashboard Component", () => {
       // Qualitative labels instead of "X pts"
       // Heat 12 >= 10 = Elevated, Risk 5 >= 4 = Elevated, Support 4 >= 4 = Elevated
       const highLabels = screen.getAllByText("Elevated");
-      expect(highLabels.length).toBe(3);
+      expect(highLabels).toHaveLength(3);
     });
 
     // High heat narrative
@@ -733,12 +776,13 @@ describe("Dashboard Component", () => {
       expect(screen.getByText("Needs review post")).toBeInTheDocument();
     });
 
-    // The title should come before the badge in DOM order (badge on right)
+    // Within the queue card, the title should come before the badge in DOM order
     const title = screen.getByText("Needs review post");
-    const badge = screen.getByText("Rapid Discussion");
+    const card = title.closest("[role='button']")!;
+    const badge = card.querySelector(".bg-warm-100");
 
     expect(
-      title.compareDocumentPosition(badge) & Node.DOCUMENT_POSITION_FOLLOWING,
+      title.compareDocumentPosition(badge!) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
   });
 
@@ -795,7 +839,7 @@ describe("Dashboard Component", () => {
     });
 
     // Recent post badge now shows attention category label instead of qualitative score
-    const recentSection = screen.getByText("Recent Posts by Author");
+    const recentSection = screen.getByText(/Recent Posts by @/);
     expect(recentSection).toBeInTheDocument();
 
     // NORMAL attention_level maps to "Routine Discussion" label
@@ -879,7 +923,7 @@ describe("Dashboard Component", () => {
     render(<Dashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText("DEV Community Dashboard")).toBeInTheDocument();
+      expect(screen.getByText("dev/signal")).toBeInTheDocument();
     });
 
     // ThemeToggle renders a button with aria-label
@@ -888,9 +932,9 @@ describe("Dashboard Component", () => {
     ).toBeInTheDocument();
   });
 
-  // ── Post Analytics Visualizations ─────────────────────────────────────
+  // ── Module-grid chart visualizations ──────────────────────────────────
 
-  it("renders Post Analytics section when metrics data is present", async () => {
+  it("renders chart modules when metrics data is present", async () => {
     const detailWithMetrics = {
       ...mockPosts[0],
       dev_url: "https://dev.to/testauthor/post-1",
@@ -970,11 +1014,10 @@ describe("Dashboard Component", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Post Analytics")).toBeInTheDocument();
+      expect(screen.getByText("Reply Velocity")).toBeInTheDocument();
     });
 
-    // All chart sections should be visible (5 charts — Contributing Signals in Post Analytics)
-    expect(screen.getByText("Reply Velocity")).toBeInTheDocument();
+    // All chart modules should be visible in the unified module grid
     expect(screen.getByText("Participation Distribution")).toBeInTheDocument();
     expect(screen.getByText("Interaction Signal")).toBeInTheDocument();
     expect(screen.getByText("Constructiveness Trend")).toBeInTheDocument();
@@ -982,7 +1025,7 @@ describe("Dashboard Component", () => {
     expect(screen.queryByText("Risk Signal Timeline")).not.toBeInTheDocument();
   });
 
-  it("shows Post Analytics with empty states when metrics is null", async () => {
+  it("shows chart modules with empty states when metrics is null", async () => {
     const detailNoMetrics = {
       ...mockPosts[0],
       dev_url: "https://dev.to/testauthor/post-1",
@@ -1014,14 +1057,13 @@ describe("Dashboard Component", () => {
       expect(screen.getByText("Discussion State")).toBeInTheDocument();
     });
 
-    // Post Analytics always shown, even without data (5 charts, no Risk Signal Timeline)
-    expect(screen.getByText("Post Analytics")).toBeInTheDocument();
+    // Chart modules always rendered, even without metrics data
     expect(screen.getByText("Reply Velocity")).toBeInTheDocument();
     expect(screen.getByText("Contributing Signals")).toBeInTheDocument();
     expect(screen.queryByText("Risk Signal Timeline")).not.toBeInTheDocument();
   });
 
-  it("renders Contributing Signals chart in Post Analytics with risk marker labels", async () => {
+  it("renders Contributing Signals chart with risk marker labels", async () => {
     const detailWithRisk = {
       ...mockPosts[0],
       dev_url: "https://dev.to/testauthor/post-1",
@@ -1077,7 +1119,7 @@ describe("Dashboard Component", () => {
       expect(screen.getByText("Discussion State")).toBeInTheDocument();
     });
 
-    // Contributing Signals chart appears in Post Analytics
+    // Contributing Signals chart appears in the module grid
     expect(screen.getByText("Contributing Signals")).toBeInTheDocument();
     expect(screen.getByText("Frequency Penalty")).toBeInTheDocument();
     expect(screen.getByText("Short Content")).toBeInTheDocument();

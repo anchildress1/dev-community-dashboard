@@ -258,6 +258,7 @@ gcloud run deploy "$SERVICE_NAME" \
   --project "$PROJECT_ID" \
   --allow-unauthenticated \
   --port "$PORT" \
+  --max-instances 1 \
   --labels "env=$ENVIRONMENT" \
   --set-env-vars "^|^NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL|ALLOWED_ORIGINS=$ALLOWED_ORIGINS" \
   --set-secrets "$SECRET_REFS"
@@ -308,6 +309,31 @@ if [[ -n "${CUSTOM_DOMAIN:-}" ]]; then
       echo "  then re-run this script, or create the mapping manually in the GCP console." >&2
     fi
   fi
+fi
+
+# ── Revision cleanup ─────────────────────────────────────────────────────────
+# Prunes revisions that serve no traffic. Opt-in: every revision listed in
+# status.traffic[] (active, traffic-split, and tagged) is kept, so rollback
+# targets and tagged revisions are never deleted. Enable with PRUNE_REVISIONS=1.
+if [[ "${PRUNE_REVISIONS:-0}" == "1" ]]; then
+  echo ""
+  echo "--- Cleaning up revisions with no traffic ---"
+  # All revisions referenced by traffic config — never delete these.
+  KEEP_REVISIONS=$(gcloud run services describe "$SERVICE_NAME" \
+    --region "$REGION" --project "$PROJECT_ID" \
+    --format='value(status.traffic[].revisionName)' | tr ';,' '\n\n' | sort -u)
+  gcloud run revisions list \
+    --service "$SERVICE_NAME" \
+    --region "$REGION" \
+    --project "$PROJECT_ID" \
+    --format='value(metadata.name)' \
+    | { grep -vFxf <(printf '%s\n' "$KEEP_REVISIONS") || true; } \
+    | while read -r rev; do
+        [[ -z "$rev" ]] && continue
+        echo "  Deleting $rev..."
+        gcloud run revisions delete "$rev" \
+          --region "$REGION" --project "$PROJECT_ID" --quiet 2>&1 || true
+      done
 fi
 
 # ── Summary ───────────────────────────────────────────────────────────────────

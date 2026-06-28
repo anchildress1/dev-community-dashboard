@@ -133,8 +133,7 @@ function setupBasicMocks(
   articles: Record<string, unknown>[],
   comments: ForemComment[] | ((id: number) => Promise<ForemComment[]>) = [],
   user:
-    | ForemUser
-    | ((username: string) => Promise<ForemUser | null>) = mockUser,
+    ForemUser | ((username: string) => Promise<ForemUser | null>) = mockUser,
 ) {
   vi.mocked(ForemClient.getLatestArticles).mockImplementation(async (page) => {
     if (page === 1) return articles as never;
@@ -2693,8 +2692,7 @@ describe("incremental LLM scoring", () => {
     expect(result.failed).toBe(0);
     // LLM failed for the new comment → heuristic mode, no placeholder scores cached
     const articleUpsert = upsertCalls.find((d) => "metrics" in d) as
-      | Record<string, unknown>
-      | undefined;
+      Record<string, unknown> | undefined;
     expect(articleUpsert).toBeDefined();
     const metrics = articleUpsert?.metrics as Record<string, unknown>;
     expect(metrics.interaction_method).toBe("heuristic");
@@ -2748,8 +2746,7 @@ describe("incremental LLM scoring", () => {
     expect(result.synced).toBe(1);
     // Keyword safety net: >= 2 support phrases in body → needs_support: true
     const articleUpsert = upsertCalls.find((d) => "metrics" in d) as
-      | Record<string, unknown>
-      | undefined;
+      Record<string, unknown> | undefined;
     expect(articleUpsert).toBeDefined();
     const metrics = articleUpsert?.metrics as Record<string, unknown>;
     expect(metrics.needs_support).toBe(true);
@@ -2816,8 +2813,7 @@ describe("incremental LLM scoring", () => {
     expect(result.synced).toBe(1);
     expect(analyzeConversation).not.toHaveBeenCalled(); // all cache hits
     const articleUpsert = upsertCalls.find((d) => "metrics" in d) as
-      | Record<string, unknown>
-      | undefined;
+      Record<string, unknown> | undefined;
     expect(articleUpsert).toBeDefined();
     const metrics = articleUpsert?.metrics as Record<string, unknown>;
     // Stored needs_support preserved — keyword scan does not run when LLM cached
