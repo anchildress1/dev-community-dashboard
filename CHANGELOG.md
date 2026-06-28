@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/anchildress1/dev-community-dashboard/compare/v1.1.0...v1.2.0) (2026-06-28)
+
+
+### Features
+
+* dev/signal redesign — dependency hardening, vuln fixes & rebrand token scaffold ([#18](https://github.com/anchildress1/dev-community-dashboard/issues/18)) ([842fdd5](https://github.com/anchildress1/dev-community-dashboard/commit/842fdd56e632a277aa46419c8db4634adf9b80f3))
+
 ## [1.1.0](https://github.com/ChecKMarKDevTools/dev-community-dashboard/compare/v1.0.0...v1.1.0) (2026-03-02)
 
 
